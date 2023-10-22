@@ -20,4 +20,4 @@ class Post(models.Model):
         ordering = ("-created_at",)  # - for decending order
 
     def __str__(self):
-        return self.name
+        return self.title
