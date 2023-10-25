@@ -1,13 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 # Create your models here.
 class Author(models.Model):
+    # Extending the Django User Model Using a One-To-One Link to create User Profile
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(unique=True)
+    joined_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(User, on_delete=models.PROTECT)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Author.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.author.save()
 
 
 class Post(models.Model):
