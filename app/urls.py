@@ -6,6 +6,6 @@ from . import views
 router = routers.DefaultRouter()
 router.register("", views.HomepageViewSet, basename="")
 router.register("posts", views.PostViewSet, basename="posts")
-router.register("collection", views.CollectionViewSet, basename="collection")
+router.register("collections", views.CollectionViewSet, basename="collections")
 # URLConf
 urlpatterns = router.urls
