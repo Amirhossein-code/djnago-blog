@@ -9,6 +9,8 @@ djangorestframework = "*"
 drf-nested-routers = "*"
 python-dotenv = "*"
 mysqlclient = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 pytest = "*"
