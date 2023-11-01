@@ -5,8 +5,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .serializers import PostSerializer, CollectionSerializer
-from .models import Post, Collection
+from .serializers.post_serializer import PostSerializer, CollectionSerializer
+from .models.post import Post, Collection
 
 
 # Create your views here.
