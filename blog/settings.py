@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -112,8 +113,9 @@ DJOSER = {
     }
 }
 
+AUTH_USER_MODEL = "core.User"
+
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
 }
-
-AUTH_USER_MODEL = "core.User"
