@@ -24,10 +24,15 @@ from django.utils.text import slugify
 #         instance.author.save()
 
 
+class Collection(models.Model):
+    name = models.CharField(max_length=255)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     slug = models.SlugField(unique=True, null=True, blank=True)
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     posted_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 

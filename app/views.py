@@ -5,8 +5,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .serializers import PostSerializer
-from .models import Post
+from .serializers import PostSerializer, CollectionSerializer
+from .models import Post, Collection
 
 
 # Create your views here.
@@ -18,3 +18,8 @@ class HomepageViewSet(viewsets.ViewSet):
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+
+class CollectionViewSet(ModelViewSet):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
