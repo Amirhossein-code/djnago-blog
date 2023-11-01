@@ -7,5 +7,6 @@ router = routers.DefaultRouter()
 router.register("", views.HomepageViewSet, basename="")
 router.register("posts", views.PostViewSet, basename="posts")
 router.register("categories", views.CategoryViewSet, basename="categories")
+router.register("author", views.AuthorViewSet, basename="author")
 # URLConf
 urlpatterns = router.urls

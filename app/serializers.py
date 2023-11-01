@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Category
+from .models import Post, Category, Author
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -22,4 +22,17 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+        ]
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+
+    class Meta:
+        model = Author
+        fields = [
+            "id",
+            "user_id",
+            "phone",
+            "birth_date",
         ]

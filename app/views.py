@@ -4,9 +4,9 @@ from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import viewsets
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .serializers import PostSerializer, CategorySerializer
-from .models import Post, Category
+from rest_framework.viewsets import ModelViewSet
+from .serializers import PostSerializer, CategorySerializer ,AuthorSerializer
+from .models import Post, Category , Author
 
 
 # Create your views here.
@@ -23,3 +23,8 @@ class PostViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+#we do not need to list all customers that is specific to admin panel so => custome view set
+class AuthorViewSet(ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
