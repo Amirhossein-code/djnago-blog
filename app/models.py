@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.text import slugify
 
 
 # # Create your models here.
@@ -29,4 +30,9 @@ class Post(models.Model):
     slug = models.SlugField(unique=True, null=True, blank=True)
     posted_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
     # author = models.ForeignKey(Author, on_delete=models.PROTECT)
+    def save(self, *args, **kwargs):
+        if not self.slug:  # Generate slug if it's not set
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
