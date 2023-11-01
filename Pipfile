@@ -11,6 +11,7 @@ python-dotenv = "*"
 mysqlclient = "*"
 djoser = "*"
 djangorestframework-simplejwt = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
 pytest = "*"
