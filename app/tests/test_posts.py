@@ -16,3 +16,4 @@ class TestCreatePost:
     def test_if_user_is_anonymus_returns_401(self , create_post):
         response = create_post({"title": "a"})
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        
