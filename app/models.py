@@ -44,8 +44,8 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     posted_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(Author, on_delete=models.PROTECT)
 
-    # author = models.ForeignKey(Author, on_delete=models.PROTECT)
     def save(self, *args, **kwargs):
         if not self.slug:  # Generate slug if it's not set
             self.slug = slugify(self.title)
