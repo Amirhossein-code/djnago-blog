@@ -22,6 +22,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+            "slug",
         ]
 
 
@@ -33,6 +34,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user_id",
+            "slug",
             "phone",
             "birth_date",
         ]
