@@ -82,3 +82,10 @@ class Post(models.Model):
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+
+class Review(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reviews")
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)

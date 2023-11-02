@@ -50,4 +50,5 @@ class TestRetrieveCategory:
         assert response.data == {
             "id": category.id,
             "title": category.title,
+            "slug": category.slug,
         }

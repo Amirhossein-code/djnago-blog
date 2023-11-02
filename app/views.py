@@ -64,13 +64,14 @@ class AuthorViewSet(ModelViewSet):
             return Response(serializer.data)
 
 
-class PostSlugViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    lookup_field = "slug"
+# related to slug implementation on the back end check out Urls.py inside this app
+# class PostSlugViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+#     lookup_field = "slug"
 
 
-class AuthorSlugViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
-    lookup_field = "slug"
+# class AuthorSlugViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = Author.objects.all()
+#     serializer_class = AuthorSerializer
+#     lookup_field = "slug"
