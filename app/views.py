@@ -1,6 +1,4 @@
-from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -16,15 +14,13 @@ from .serializers import (
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
-
 )
-from .models import Post, Category, Author #Review
+from .models import Post, Category, Author
 
 
-# Create your views here.
 class HomepageViewSet(viewsets.ViewSet):
     def list(self, request):
-        return Response("Welcome to the homepage")
+        return render(request, "app/index.html")
 
 
 class PostViewSet(ModelViewSet):
@@ -68,22 +64,3 @@ class AuthorViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
-
-
-# class ReviewViewSet(ModelViewSet):
-#     queryset = Review.objects.all()
-#     serializer_class = ReviewSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-
-
-# related to slug implementation on the back end check out Urls.py inside this app
-# class PostSlugViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-#     lookup_field = "slug"
-
-
-# class AuthorSlugViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = Author.objects.all()
-#     serializer_class = AuthorSerializer
-#     lookup_field = "slug"
