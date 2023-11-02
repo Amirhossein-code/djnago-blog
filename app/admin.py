@@ -16,9 +16,23 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ["title", "category", "posted_at", "last_updated"]
+    autocomplete_fields = ["category"]
+    prepopulated_fields = {"slug": ["title"]}
+    list_display = [
+        "author",
+        "id",
+        "title",
+        "content",
+        "category",
+        "posted_at",
+        "last_updated",
+    ]
+    list_filter = ["category", "last_updated"]
+    list_select_related = ["category"]
+    search_fields = ["title"]
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ["id", "title"]
+    search_fields = ["title"]

@@ -14,6 +14,7 @@ class Author(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     joined_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    slug = models.SlugField(unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -29,12 +30,37 @@ class Author(models.Model):
     class Meta:
         ordering = ["user__first_name", "user__last_name"]
 
+    def save(self, *args, **kwargs):
+        if not self.slug:  # Generate slug if it's not set
+            base_slug = slugify(self.__str__())
+            slug = base_slug
+            counter = 1
+            while Author.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        # Generate a unique slug
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Category.objects.filter(slug=slug).exists():  # ensure slug is unique
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):
@@ -48,5 +74,11 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:  # Generate slug if it's not set
-            self.slug = slugify(self.title)
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            while Post.objects.filter(slug=slug).exists():  # ensure slug is unique
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         super().save(*args, **kwargs)
