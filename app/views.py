@@ -12,8 +12,13 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
-from .serializers import PostSerializer, CategorySerializer, AuthorSerializer
-from .models import Post, Category, Author
+from .serializers import (
+    PostSerializer,
+    CategorySerializer,
+    AuthorSerializer,
+    ReviewSerializer,
+)
+from .models import Post, Category, Author, Review
 
 
 # Create your views here.
@@ -26,6 +31,7 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = "post"
 
 
 class CategoryViewSet(ModelViewSet):
@@ -62,6 +68,12 @@ class AuthorViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 # related to slug implementation on the back end check out Urls.py inside this app

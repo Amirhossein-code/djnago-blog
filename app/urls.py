@@ -9,8 +9,12 @@ router.register("posts", views.PostViewSet, basename="posts")
 router.register("categories", views.CategoryViewSet, basename="categories")
 router.register("author", views.AuthorViewSet, basename="author")
 
+posts_router = routers.NestedDefaultRouter(router, "posts", lookup="post")
+posts_router.register("reviews", views.ReviewViewSet, basename="post-reviews")
+
 # URLConf
-urlpatterns = router.urls
+urlpatterns = router.urls + posts_router.urls
+
 
 # For implementing slug endpoints inside Backend
 # the Implementation of these endpoints have been transfered to the frontend
