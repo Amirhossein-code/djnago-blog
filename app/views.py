@@ -53,7 +53,7 @@ class AuthorViewSet(ModelViewSet):
 
     @action(detail=False, methods=["GET", "PUT"])
     def me(self, request):
-        (author, created) = Author.objects.get_or_create(user_id=request.user.id)
+        author = Author.objects.get(user_id=request.user.id)
         if request.method == "GET":
             serializer = AuthorSerializer(author)
             return Response(serializer.data)
