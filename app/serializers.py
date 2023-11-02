@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Category, Author, Review
+from .models import Post, Category, Author#, Review
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -40,7 +40,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         ]
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ["post", "name", "description", "date"]
+# class ReviewSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Review
+#         fields = ["post", "name", "description", "date"]

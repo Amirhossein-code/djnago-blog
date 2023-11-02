@@ -16,9 +16,9 @@ from .serializers import (
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
-    ReviewSerializer,
+
 )
-from .models import Post, Category, Author, Review
+from .models import Post, Category, Author #Review
 
 
 # Create your views here.
@@ -70,10 +70,10 @@ class AuthorViewSet(ModelViewSet):
             return Response(serializer.data)
 
 
-class ReviewViewSet(ModelViewSet):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+# class ReviewViewSet(ModelViewSet):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 # related to slug implementation on the back end check out Urls.py inside this app
