@@ -38,24 +38,28 @@ class Author(models.Model):
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, null=True, blank=True)
+    title = models.CharField(max_length=190)
+    slug = models.SlugField(unique=True, null=True, blank=True, max_length=190)
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        # Generate a unique slug
         if not self.slug:
-            base_slug = slugify(self.title)
-            slug = base_slug
-            counter = 1
-            while Category.objects.filter(slug=slug).exists():  # ensure slug is unique
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
-
+            self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         base_slug = slugify(self.title)
+    #         slug = base_slug
+    #         counter = 1
+    #         while Category.objects.filter(slug=slug).exists():  # ensure slug is unique
+    #             slug = f"{base_slug}-{counter}"
+    #             counter += 1
+    #         self.slug = slug
+
+    #     super().save(*args, **kwargs)
 
 
 class Post(models.Model):

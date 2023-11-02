@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from model_bakery import baker
 from app.models import Category
+from rest_framework.test import APITestCase
 
 
 @pytest.fixture
@@ -39,16 +40,18 @@ class TestCreateCategory:
         assert response.data["title"] is not None
 
 
-@pytest.mark.django_db
-class TestRetrieveCategory:
-    def test_if_category_exsists_returns_200(self, api_client):
+class TestRetrieveCategory(APITestCase):
+    def test_if_category_exists_returns_200(self):
         category = baker.make(Category)
 
-        response = api_client.get(f"/categories/{category.id}/")
+        response = self.client.get(f"/categories/{category.id}/")
 
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data == {
-            "id": category.id,
-            "title": category.title,
-            "slug": category.slug,
-        }
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data,
+            {
+                "id": category.id,
+                "title": category.title,
+                "slug": category.slug,
+            },
+        )
