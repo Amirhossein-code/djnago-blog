@@ -8,6 +8,9 @@ class Author(models.Model):
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True, blank=True)
     joined_at = models.DateTimeField(auto_now_add=True)
+    profile_image = models.ImageField(
+        upload_to="profile_images/", blank=True, null=True
+    )
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, null=True, blank=True)
 

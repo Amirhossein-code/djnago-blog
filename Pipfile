@@ -12,6 +12,7 @@ mysqlclient = "*"
 djoser = "*"
 djangorestframework-simplejwt = "*"
 django-debug-toolbar = "*"
+pillow = "*"
 
 [dev-packages]
 pytest = "*"
