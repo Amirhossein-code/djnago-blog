@@ -18,25 +18,28 @@ The frontend part of the project is yet to be developed, and this repository foc
 
 ## Installation
 
-1. First Clone the repository
+1. First Clone the repository:
+```
+git clone https://github.com/Amirhossein-code/djnago-blog.git
+```
 2. Navigate to the project directory (where manage.py is located):
 ```
 cd project-directory
 ```
-4.Install the project dependencies using pipenv:
+3.Install the project dependencies using pipenv:
 ```
 pipenv install
 ```
-5.Activate the virtual environment:
+4.Activate the virtual environment:
 ```
 pipenv shell
 ```
-6.Run database migrations:
+5.Run database migrations:
 ```
 python manage.py migrate
 ```
-7.Start the development server:
+6.Start the development server:
 ```
 python manage.py runserver
 ```
-8.Access the API at : http://localhost:8000
+7.Access the API at : http://localhost:8000
