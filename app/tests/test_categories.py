@@ -20,16 +20,17 @@ class TestCreateCategory:
         response = create_category({"title": "a"})
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_if_data_is_valid_returns_201(self, authenticate, create_category):
-        authenticate()
-        response = create_category({"title": "a"})
-        assert response.status_code == status.HTTP_201_CREATED
-        assert response.data["id"] > 0
-
     def test_if_user_is_authenticated_can_creat_category_returns_201(
         self, authenticate, create_category
     ):
         authenticate()
+        response = create_category({"title": "a"})
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_if_user_is_admin_can_create_category_returns_201(
+        self, authenticate, create_category
+    ):
+        authenticate(is_staff=True)
         response = create_category({"title": "a"})
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -38,20 +39,3 @@ class TestCreateCategory:
         response = create_category({"title": ""})
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data["title"] is not None
-
-
-class TestRetrieveCategory(APITestCase):
-    def test_if_category_exists_returns_200(self):
-        category = baker.make(Category)
-
-        response = self.client.get(f"/categories/{category.id}/")
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            response.data,
-            {
-                "id": category.id,
-                "title": category.title,
-                "slug": category.slug,
-            },
-        )

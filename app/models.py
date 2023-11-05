@@ -42,16 +42,19 @@ class Author(models.Model):
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=190)
+    title = models.CharField(max_length=188)
     slug = models.SlugField(unique=True, null=True, blank=True, max_length=190)
 
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
+    # def __str__(self):
+    #     return self.title
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.title)
+    #     super().save(*args, **kwargs)
 
     # def save(self, *args, **kwargs):
     #     if not self.slug:
@@ -64,12 +67,23 @@ class Category(models.Model):
     #         self.slug = slug
 
     #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title, allow_unicode=True)
+            slug = base_slug
+            counter = 1
+            while Category.objects.filter(slug=slug).exists():  # ensure slug is unique
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=188)
     content = models.TextField()
-    slug = models.SlugField(unique=True, null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True, blank=True, max_length=190)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     posted_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
@@ -80,7 +94,7 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:  # Generate slug if it's not set
-            base_slug = slugify(self.title)
+            base_slug = slugify(self.title, allow_unicode=True)
             slug = base_slug
             counter = 1
             while Post.objects.filter(slug=slug).exists():  # ensure slug is unique

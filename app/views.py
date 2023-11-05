@@ -29,6 +29,12 @@ class PostViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     lookup_field = "post"
 
+    def perform_create(self, serializer):
+        author = (
+            self.request.user.author
+        )  # Retrieve the author associated with the authenticated user
+        serializer.save(author=author)
+
 
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()

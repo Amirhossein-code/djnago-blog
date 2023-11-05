@@ -3,10 +3,13 @@ from .models import Post, Category, Author
 
 
 class PostSerializer(serializers.ModelSerializer):
+    author_id = serializers.IntegerField(source="author.id", read_only=True)
+
     class Meta:
         model = Post
         fields = [
             "id",
+            "author_id",
             "title",
             "content",
             "slug",
