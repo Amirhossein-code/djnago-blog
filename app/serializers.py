@@ -31,12 +31,16 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class AuthorSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
+    first_name = serializers.CharField(source="user.first_name")
+    last_name = serializers.CharField(source="user.last_name")
 
     class Meta:
         model = Author
         fields = [
             "id",
             "user_id",
+            "first_name",
+            "last_name",
             "slug",
             "phone",
             "birth_date",
