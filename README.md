@@ -43,3 +43,20 @@ python manage.py migrate
 python manage.py runserver
 ```
 7.Access the API at : http://localhost:8000
+
+## Seting up the MySQL Database 
+1.Create a .env file at root directory and set the required fields
+The .env file :
+```
+DB_NAME=your_database_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=3306
+```
+Note : The databse will be automatically created when runiing python manage.py migrate
+if not open a query console and run : (db : MySQL)
+```
+CREATE DATABASE IF NOT EXISTS DB_name;
+```
+Make Sure to properly set up the .env file 
