@@ -5,9 +5,10 @@ from django.utils.text import slugify
 
 
 class Author(models.Model):
-    phone = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     joined_at = models.DateTimeField(auto_now_add=True)
+    bio = models.CharField(max_length=550, null=True, blank=True)
     profile_image = models.ImageField(
         upload_to="profile_images/", blank=True, null=True
     )

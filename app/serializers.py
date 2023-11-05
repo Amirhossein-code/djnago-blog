@@ -37,4 +37,6 @@ class AuthorSerializer(serializers.ModelSerializer):
             "slug",
             "phone",
             "birth_date",
+            "bio",
+            "profile_image",
         ]
