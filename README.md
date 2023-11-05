@@ -52,7 +52,6 @@ DB_NAME=your_database_name
 DB_USER=your_username
 DB_PASSWORD=your_password
 DB_HOST=localhost
-DB_PORT=3306
 ```
 Note : The databse will be automatically created when runiing python manage.py migrate
 if not open a query console and run : (db : MySQL)

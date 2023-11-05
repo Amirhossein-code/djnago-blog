@@ -2,12 +2,14 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
+from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET")
+# Defualt secret key set for Dev purposes
+SECRET_KEY = "%na*knyglp1q^(7xz_r*d6)iz9n)ocy=ko(_a5xip5jg*#^trhb-$*tk+fefps@kqa*e0c-0papxe%jzcvs7d@yij1jz1sc3cmqd"
 
 DEBUG = True
 
