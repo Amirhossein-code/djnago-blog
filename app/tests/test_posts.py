@@ -30,8 +30,18 @@ class TestCreatePost:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     # def test_if_user_is_authenticated_can_create_post_returns_201(
-    #     self, authenticated_user, create_post
+    #     self, authenticate, create_post
     # ):
+    #     authenticate()
+    #     post = baker.make(Post)
+    #     data = {
+    #         "title": post.title,
+    #         "content": post.content,
+    #         "category": post.category,
+    #     }
+    #     response = create_post(data)
+    #     assert response.status_code == status.HTTP_201_CREATED
+
     #     author = baker.make(Author)
 
     #     # Get the associated user instance from the Author instance

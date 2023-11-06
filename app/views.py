@@ -27,7 +27,6 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    lookup_field = "post"
 
     def perform_create(self, serializer):
         author = (
