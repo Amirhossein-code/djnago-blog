@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Category, Author
+from .models import AuthorProfileImage, Post, Category, Author
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -20,8 +20,8 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class SimplePostSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(source="user.first_name")
-    last_name = serializers.CharField(source="user.last_name")
+    first_name = serializers.CharField(source="author.first_name")
+    last_name = serializers.CharField(source="author.last_name")
 
     class Meta:
         model = Post
@@ -49,7 +49,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")
-
+    # profile_image = serializers.ImageField(source='author.profile_')
     class Meta:
         model = Author
         fields = [
@@ -61,5 +61,15 @@ class AuthorSerializer(serializers.ModelSerializer):
             "phone",
             "birth_date",
             "bio",
-            "profile_image",
+            # "profile_image",
+        ]
+
+
+class AuthorProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthorProfileImage
+        fields = [
+            "id",
+            "author",
+            "image",
         ]
