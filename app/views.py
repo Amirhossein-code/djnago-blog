@@ -14,6 +14,7 @@ from .serializers import (
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
+    SimplePostSerializer
 )
 from .models import Post, Category, Author
 from .pagination import PostsPagination, AuthorsPagination, CategoriesPagination
@@ -45,7 +46,7 @@ class AuthorViewSet(ModelViewSet):
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = SimplePostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PostsPagination
 

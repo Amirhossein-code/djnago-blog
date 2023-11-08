@@ -19,6 +19,22 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
 
+class SimplePostSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source="user.first_name")
+    last_name = serializers.CharField(source="user.last_name")
+
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "title",
+            "content",
+            "category",
+        ]
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

@@ -7,13 +7,14 @@ from rest_framework.permissions import (
 )
 from .models import AuthorReview, PostReview
 from .serializers import AuthorReviewSerializer, PostReviewSerializer
-from .pagination import PostReviewPagination
+from .pagination import PostReviewPagination, AuthorReviewPagination
 
 
 class AuthorReviewViewSet(viewsets.ModelViewSet):
     queryset = AuthorReview.objects.all()
     serializer_class = AuthorReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = AuthorReviewPagination
 
 
 class PostReviewViewSet(viewsets.ModelViewSet):
