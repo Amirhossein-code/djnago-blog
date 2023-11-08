@@ -9,7 +9,11 @@ class Author(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     joined_at = models.DateTimeField(auto_now_add=True)
     bio = models.CharField(max_length=550, null=True, blank=True)
-
+    profile_image = models.ImageField(
+        upload_to="profile_images/",
+        blank=True,
+        null=True,
+    )
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, null=True, blank=True)
 
@@ -37,13 +41,6 @@ class Author(models.Model):
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
-
-
-class AuthorProfileImage(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    profile_image = models.ImageField(
-        upload_to="profile_images/", blank=True, null=True
-    )
 
 
 class Category(models.Model):
@@ -87,4 +84,5 @@ class Post(models.Model):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
+
         super().save(*args, **kwargs)

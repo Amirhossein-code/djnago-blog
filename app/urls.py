@@ -13,8 +13,8 @@ posts_router.register("reviews", PostReviewViewSet, basename="post-reviews")
 
 authors_router = routers.NestedDefaultRouter(router, "authors", lookup="author")
 authors_router.register("reviews", AuthorReviewViewSet, basename="author-review")
-authors_router.register(
-    "profile-image", views.AuthorProfileImageViewSet, basename="profile-image"
-)
+# authors_router.register(
+#     "images", views.AuthorProfileImageViewSet, basename="images"
+# )
 
 urlpatterns = router.urls + posts_router.urls + authors_router.urls

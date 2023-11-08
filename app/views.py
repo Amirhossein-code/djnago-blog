@@ -11,13 +11,12 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 from .serializers import (
-    AuthorProfileImageSerializer,
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
     SimplePostSerializer,
 )
-from .models import AuthorProfileImage, Post, Category, Author
+from .models import Post, Category, Author
 from .pagination import PostsPagination, AuthorsPagination, CategoriesPagination
 
 
@@ -32,7 +31,7 @@ class AuthorViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = AuthorsPagination
 
-    @action(detail=False, methods=["GET", "PUT"])
+    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
     def me(self, request):
         author = Author.objects.get(user_id=request.user.id)
         if request.method == "GET":
@@ -71,14 +70,11 @@ class CategoryViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-class AuthorProfileImageViewSet(ModelViewSet):
-    # queryset = AuthorProfileImage.objects.get(author_id = self)
-    serializer_class = AuthorProfileImageSerializer
+# class AuthorProfileImageViewSet(ModelViewSet):
+#     serializer_class = AuthorProfileImageSerializer
 
-    def perform_create(self, serializer):
-        # Retrieve the author associated with the authenticated user and pass it to the serializer
-        author = self.request.user.author
-        serializer.save(author=author)
+#     def get_serializer_context(self):
+#         return {"author_id": self.kwargs["author_pk"]}
 
-    def get_queryset(self):
-        return AuthorProfileImage.objects.filter(author_id=self.request.user.author)
+#     def get_queryset(self):
+#         return AuthorProfileImage.objects.filter(author_id=self.kwargs["author_pk"])
