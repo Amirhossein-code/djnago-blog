@@ -16,7 +16,10 @@ class Author(models.Model):
         null=True,
     )
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    slug = models.SlugField(unique=True, null=True, blank=True)
+    slug = AutoSlugField(
+        populate_from=lambda instance: f"{instance.user.first_name} {instance.user.last_name}",
+        unique=True,
+    )
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -32,42 +35,18 @@ class Author(models.Model):
     class Meta:
         ordering = ["user__first_name", "user__last_name"]
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            base_slug = slugify(self.__str__())
-            slug = base_slug
-            counter = 1
-            while Author.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
-        super().save(*args, **kwargs)
-
 
 class Category(models.Model):
     title = models.CharField(max_length=188)
-    slug = models.SlugField(unique=True, null=True, blank=True, max_length=190)
+    slug = AutoSlugField(populate_from="title", unique=True)
 
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            base_slug = slugify(self.title, allow_unicode=True)
-            slug = base_slug
-            counter = 1
-            while Category.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
-
-        super().save(*args, **kwargs)
-
 
 class Post(models.Model):
-    title = models.CharField(max_length=188)
+    title = models.CharField(max_length=255)
     content = models.TextField()
-    # slug = models.SlugField(unique=True, null=True, blank=True, max_length=190)
     slug = AutoSlugField(populate_from="title", unique=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     posted_at = models.DateTimeField(auto_now_add=True)
@@ -76,8 +55,3 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         self.slug = generate_unique_slug(Post, self.title)
-    #     super().save(*args, **kwargs)

@@ -11,3 +11,14 @@ def generate_unique_slug(model, title, base_slug=None):
         counter += 1
 
     return slug
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         base_slug = slugify(self.__str__())
+    #         slug = base_slug
+    #         counter = 1
+    #         while Author.objects.filter(slug=slug).exists():
+    #             slug = f"{base_slug}-{counter}"
+    #             counter += 1
+    #         self.slug = slug
+    #     super().save(*args, **kwargs)
