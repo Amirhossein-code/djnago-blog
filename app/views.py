@@ -18,6 +18,7 @@ from .serializers import (
 )
 from .models import Post, Category, Author
 from .pagination import PostsPagination, AuthorsPagination, CategoriesPagination
+from .permissions import IsAdminOrReadOnly
 
 
 class HomepageViewSet(viewsets.ViewSet):
@@ -26,13 +27,26 @@ class HomepageViewSet(viewsets.ViewSet):
 
 
 class AuthorViewSet(ModelViewSet):
-    queryset = Author.objects.all()
+    """
+    Applying pagination come with several bugs and forces us to
+    create custome update and create methods for handling user update and create
+    we should find a work around or implement the update and create methods
+    This bug is avaiable only at this end point the posts endpoint pagination
+    seems to work well so dose the categories endpoint pagination
+    """
+
+    queryset = Author.objects.prefetch_related("user").all()
     serializer_class = AuthorSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     # pagination_class = AuthorsPagination
 
     @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
     def me(self, request):
+        """
+        Users can see their own profile using this endpoint
+        This endpoint is the only place they can complete all their user
+        related stuff All the author models fields
+        """
         author = Author.objects.get(user_id=request.user.id)
         if request.method == "GET":
             serializer = AuthorSerializer(author)
@@ -45,12 +59,18 @@ class AuthorViewSet(ModelViewSet):
 
 
 class PostViewSet(ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Post.objects.prefetch_related("category", "author").all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PostsPagination
 
     def perform_create(self, serializer):
+        """
+        This method passes the current logged in user that is posting to this
+        endpoint and set the post author based on that users author profile
+        + Automating the author input
+        + Preventing users to post as someone else
+        """
         author = self.request.user.author
         serializer.save(author=author)
 
@@ -58,12 +78,16 @@ class PostViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     pagination_class = CategoriesPagination
 
     def get_permissions(self):
-        if self.request.method == "GET":
-            return [AllowAny()]
-        elif self.request.method == "POST":
+        """
+        Normally the categories are created by the website Owners and mod users so
+        Users may not abuse this function but in this case we give the users the
+        ability to create a category for their specific use case
+        Note : Normal users can only create categories
+        """
+        if self.request.method == "POST":
             return [IsAuthenticated()]
         return super().get_permissions()

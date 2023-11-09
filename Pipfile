@@ -13,6 +13,7 @@ djoser = "*"
 djangorestframework-simplejwt = "*"
 django-debug-toolbar = "*"
 pillow = "*"
+django-autoslug = "*"
 
 [dev-packages]
 pytest = "*"
