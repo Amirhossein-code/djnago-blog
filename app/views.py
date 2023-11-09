@@ -14,7 +14,7 @@ from .serializers import (
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
-    SimplePostSerializer,
+    # SimplePostSerializer,
 )
 from .models import Post, Category, Author
 from .pagination import PostsPagination, AuthorsPagination, CategoriesPagination
@@ -29,7 +29,7 @@ class AuthorViewSet(ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    pagination_class = AuthorsPagination
+    # pagination_class = AuthorsPagination
 
     @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
     def me(self, request):
@@ -46,12 +46,11 @@ class AuthorViewSet(ModelViewSet):
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
-    serializer_class = SimplePostSerializer
+    serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PostsPagination
 
     def perform_create(self, serializer):
-        # Retrieve the author associated with the authenticated user and pass it to the serializer
         author = self.request.user.author
         serializer.save(author=author)
 
@@ -68,13 +67,3 @@ class CategoryViewSet(ModelViewSet):
         elif self.request.method == "POST":
             return [IsAuthenticated()]
         return super().get_permissions()
-
-
-# class AuthorProfileImageViewSet(ModelViewSet):
-#     serializer_class = AuthorProfileImageSerializer
-
-#     def get_serializer_context(self):
-#         return {"author_id": self.kwargs["author_pk"]}
-
-#     def get_queryset(self):
-#         return AuthorProfileImage.objects.filter(author_id=self.kwargs["author_pk"])

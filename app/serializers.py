@@ -19,20 +19,20 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
 
-class SimplePostSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(source="author.first_name")
-    last_name = serializers.CharField(source="author.last_name")
+# class SimplePostSerializer(serializers.ModelSerializer):
+#     first_name = serializers.CharField(source="author.first_name")
+#     last_name = serializers.CharField(source="author.last_name")
 
-    class Meta:
-        model = Post
-        fields = [
-            "id",
-            "first_name",
-            "last_name",
-            "title",
-            "content",
-            "category",
-        ]
+#     class Meta:
+#         model = Post
+#         fields = [
+#             "id",
+#             "first_name",
+#             "last_name",
+#             "title",
+#             "content",
+#             "category",
+#         ]
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -47,9 +47,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class AuthorSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
-    first_name = serializers.CharField(source="user.first_name")
-    last_name = serializers.CharField(source="user.last_name")
-    # profile_image = serializers.ImageField(source="author")
+    first_name = serializers.CharField(source="user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
 
     class Meta:
         model = Author
@@ -64,17 +63,3 @@ class AuthorSerializer(serializers.ModelSerializer):
             "bio",
             "profile_image",
         ]
-
-
-# class AuthorProfileImageSerializer(serializers.ModelSerializer):
-#     def create(self, validated_data):
-#         author_id = self.context["author_id"]
-#         return AuthorProfileImage.objects.create(author_id=author_id, **validated_data)
-
-#     class Meta:
-#         model = AuthorProfileImage
-#         fields = [
-#             "id",
-#             # "author",
-#             "images",
-#         ]
