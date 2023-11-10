@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Post, Category, Author
 
 
+# Post Serializers
 class PostSerializer(serializers.ModelSerializer):
     author_id = serializers.IntegerField(source="author.id", read_only=True)
 
@@ -39,6 +40,7 @@ class IntroPostSerializer(serializers.ModelSerializer):
         ]
 
 
+# Category serialziers
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -63,10 +65,11 @@ class CategoryWithPostsSerializer(serializers.ModelSerializer):
 
     def get_posts(self, category):
         posts = category.posts.all()[:2]
-        serializer = SimplePostSerializer(posts, many=True, read_only=True)
+        serializer = IntroPostSerializer(posts, many=True, read_only=True)
         return serializer.data
 
 
+# Author serialziers
 class AuthorWithPostSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
