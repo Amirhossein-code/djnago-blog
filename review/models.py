@@ -14,8 +14,10 @@ class Review(models.Model):
 
 
 class PostReview(Review):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reviews")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="postreviews")
 
 
 class AuthorReview(Review):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="reviews")
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="authorreviews"
+    )

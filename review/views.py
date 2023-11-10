@@ -11,10 +11,21 @@ from .pagination import PostReviewPagination, AuthorReviewPagination
 
 
 class AuthorReviewViewSet(viewsets.ModelViewSet):
+    # bugged
+    # need to implement a filtering to get all the reviews associated with the author rather than returning all reviwes
+    # this is also valid for PostReview
     queryset = AuthorReview.objects.all()
     serializer_class = AuthorReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = AuthorReviewPagination
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        user = self.request.user
+        author_id = self.kwargs["author_pk"]
+        context["user"] = user
+        context["author_id"] = author_id
+        return context
 
 
 class PostReviewViewSet(viewsets.ModelViewSet):
