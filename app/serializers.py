@@ -63,3 +63,19 @@ class AuthorSerializer(serializers.ModelSerializer):
             "bio",
             "profile_image",
         ]
+
+
+class SimpleAuthorSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source="user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
+
+    class Meta:
+        model = Author
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "slug",
+            "bio",
+            "profile_image",
+        ]

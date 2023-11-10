@@ -14,6 +14,7 @@ from .serializers import (
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
+    SimpleAuthorSerializer,
     # SimplePostSerializer,
 )
 from .models import Post, Category, Author
@@ -36,9 +37,14 @@ class AuthorViewSet(ModelViewSet):
     """
 
     queryset = Author.objects.prefetch_related("user").all()
-    serializer_class = AuthorSerializer
+    serializer_class = SimpleAuthorSerializer
     permission_classes = [IsAdminOrReadOnly]
+
     # pagination_class = AuthorsPagination
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return AuthorSerializer
+        return SimpleAuthorSerializer
 
     @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
     def me(self, request):
