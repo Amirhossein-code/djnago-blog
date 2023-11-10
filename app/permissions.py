@@ -15,3 +15,17 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 # class ViewCustomerHistoryPermission(permissions.BasePermission):
 #     def has_permission(self, request, view):
 #         return request.user.has_perm('store.view_history')
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission class to allow owners to edit their own objects.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Allow read-only permissions for all requests
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Check if the user is the owner of the object
+        return obj.owner == request.user

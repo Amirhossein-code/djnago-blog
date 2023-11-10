@@ -1,15 +1,18 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import (
     IsAuthenticated,
     AllowAny,
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
+from .models import Post, Category, Author
 from .serializers import (
     AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
@@ -19,19 +22,18 @@ from .serializers import (
     SimpleAuthorSerializer,
     SimplePostSerializer,
 )
-from .models import Post, Category, Author
 from .pagination import (
     FilteredPostsPagination,
     PostsPagination,
     AuthorsPagination,
     CategoriesPagination,
 )
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 
 
 class HomepageViewSet(viewsets.ViewSet):
     def list(self, request):
-        return render(request, "app/index.html")
+        return Response("API is Running This Is HomePage")
 
 
 class AuthorViewSet(ModelViewSet):
@@ -45,9 +47,15 @@ class AuthorViewSet(ModelViewSet):
             return AuthorSerializer
         if self.action == "retrieve":
             return AuthorWithPostSerializer
+        if self.action == "my_posts":
+            return PostSerializer
         return SimpleAuthorSerializer
 
-    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        methods=["GET", "PUT", "DELETE"],
+        permission_classes=[IsAuthenticated],
+    )
     def me(self, request):
         """
         Users can see their own profile using this endpoint
@@ -63,6 +71,9 @@ class AuthorViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+        elif request.method == "DELETE":
+            author.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,
@@ -79,11 +90,27 @@ class AuthorViewSet(ModelViewSet):
         serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)
 
+    @action(
+        detail=False,
+        methods=["GET", "DELETE", "PUT", "PATCH"],
+        permission_classes=[IsAuthenticated],
+    )
+    def my_posts(self, request):
+        """
+        Retrieve posts of the logged-in user.
+        the loggeed in user can not create new post from this end point
+        for posting a post use posts end point
+        """
+        author = request.user.author
+        posts = author.post_set.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.prefetch_related("category", "author").all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     pagination_class = PostsPagination
 
     def perform_create(self, serializer):
@@ -95,6 +122,13 @@ class PostViewSet(ModelViewSet):
         """
         author = self.request.user.author
         serializer.save(author=author)
+
+    def perform_destroy(self, instance):
+        # Check if the author of the post is the current authenticated user
+        if instance.author != self.request.user.author:
+            raise PermissionDenied("You do not have permission to delete this post.")
+
+        instance.delete()
 
 
 class CategoryViewSet(ModelViewSet):
