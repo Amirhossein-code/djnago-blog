@@ -16,7 +16,7 @@ from .models import Post, Category, Author
 from .serializers import (
     AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
-    MyPostsSerializer,
+    IntroPostSerializer,
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
@@ -29,7 +29,7 @@ from .pagination import (
     AuthorsPagination,
     CategoriesPagination,
 )
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly, IsOwnerOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 
 
 class HomepageViewSet(viewsets.ViewSet):
@@ -96,6 +96,19 @@ class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [IsAuthorOrReadOnly]
     pagination_class = PostsPagination
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="my_posts",
+        permission_classes=[IsAuthorOrReadOnly],
+    )
+    def my_posts(self, request):
+        author = request.user.author
+        posts = author.my_posts.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
     # Currently handeled by Cstome permission class
     # def perform_create(self, serializer):
     #     author = self.request.user.author
@@ -113,18 +126,6 @@ class PostViewSet(ModelViewSet):
     #         raise PermissionDenied("You do not have permission to update this post.")
 
     #     serializer.save()
-
-    @action(
-        detail=False,
-        methods=["GET"],
-        url_path="my_posts",
-        permission_classes=[IsAuthorOrReadOnly],
-    )
-    def my_posts(self, request):
-        author = request.user.author
-        posts = author.my_posts.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
 
 
 class CategoryViewSet(ModelViewSet):
@@ -150,7 +151,9 @@ class CategoryViewSet(ModelViewSet):
         pagination_class=FilteredPostsPagination,
     )
     def posts(self, request, pk=None):
+        # intro post serializer implemented to only see quick intros
+        # can be changed to Simple post serialzer if current data is insuffcient
         category = self.get_object()
         posts = category.posts.all()
-        serializer = SimplePostSerializer(posts, many=True)
+        serializer = IntroPostSerializer(posts, many=True)
         return Response(serializer.data)

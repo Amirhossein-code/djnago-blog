@@ -21,6 +21,7 @@ Authors end-points
 
 Posts Endpoint
 /posts                  List all posts 
+/posts/my_posts         See all logged in users posts
 /posts/<id>             see specific post
 /posts/id/reviews       see post reviews
 /posts/id/reviews/<id>  see a specific post reviews
