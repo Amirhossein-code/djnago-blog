@@ -89,8 +89,8 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
         ]
 
     def get_posts(self, author):
-        posts = author.post_set.all()[:2]
-        serializer = SimplePostSerializer(posts, many=True)
+        posts = author.posts.all()[:2]
+        serializer = SimplePostSerializer(posts, many=True, read_only=True)
         return serializer.data
 
 
