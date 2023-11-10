@@ -39,6 +39,20 @@ class IntroPostSerializer(serializers.ModelSerializer):
         ]
 
 
+class MyPostsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "title",
+            "content",
+            "slug",
+            "category",
+            "posted_at",
+            "last_updated",
+        ]
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

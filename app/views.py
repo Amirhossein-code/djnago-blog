@@ -16,6 +16,7 @@ from .models import Post, Category, Author
 from .serializers import (
     AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
+    MyPostsSerializer,
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
@@ -48,7 +49,7 @@ class AuthorViewSet(ModelViewSet):
         if self.action == "retrieve":
             return AuthorWithPostSerializer
         if self.action == "my_posts":
-            return PostSerializer
+            return MyPostsSerializer
         return SimpleAuthorSerializer
 
     @action(
@@ -103,7 +104,7 @@ class AuthorViewSet(ModelViewSet):
         """
         author = request.user.author
         posts = author.post_set.all()
-        serializer = PostSerializer(posts, many=True)
+        serializer = MyPostsSerializer(posts, many=True)
         return Response(serializer.data)
 
 
