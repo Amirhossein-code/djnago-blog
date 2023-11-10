@@ -113,12 +113,6 @@ class CategoryViewSet(ModelViewSet):
     pagination_class = CategoriesPagination
 
     def get_permissions(self):
-        """
-        Normally the categories are created by the website Owners and mod users so
-        Users may not abuse this function but in this case we give the users the
-        ability to create a category for their specific use case
-        Note : Normal users can only create categories
-        """
         if self.request.method == "POST":
             return [IsAuthenticated()]
         return super().get_permissions()
