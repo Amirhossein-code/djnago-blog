@@ -19,20 +19,16 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
 
-# class SimplePostSerializer(serializers.ModelSerializer):
-#     first_name = serializers.CharField(source="author.first_name")
-#     last_name = serializers.CharField(source="author.last_name")
-
-#     class Meta:
-#         model = Post
-#         fields = [
-#             "id",
-#             "first_name",
-#             "last_name",
-#             "title",
-#             "content",
-#             "category",
-#         ]
+class SimplePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "title",
+            "content",
+            "category",
+            "slug",
+        ]
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -45,10 +41,29 @@ class CategorySerializer(serializers.ModelSerializer):
         ]
 
 
+class CategoryWithPostsSerializer(serializers.ModelSerializer):
+    posts = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = [
+            "id",
+            "title",
+            "slug",
+            "posts",
+        ]
+
+    def get_posts(self, author):
+        posts = author.post_set.all()[:2]
+        serializer = SimplePostSerializer(posts, many=True)
+        return serializer.data
+
+
 class AuthorSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
+    posts = serializers.SerializerMethodField()
 
     class Meta:
         model = Author
@@ -62,7 +77,13 @@ class AuthorSerializer(serializers.ModelSerializer):
             "birth_date",
             "bio",
             "profile_image",
+            "posts",
         ]
+
+    def get_posts(self, author):
+        posts = author.post_set.all()[:2]
+        serializer = SimplePostSerializer(posts, many=True)
+        return serializer.data
 
 
 class SimpleAuthorSerializer(serializers.ModelSerializer):

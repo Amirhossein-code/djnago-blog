@@ -11,10 +11,12 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 from .serializers import (
+    CategoryWithPostsSerializer,
     PostSerializer,
     CategorySerializer,
     AuthorSerializer,
     SimpleAuthorSerializer,
+    SimplePostSerializer,
     # SimplePostSerializer,
 )
 from .models import Post, Category, Author
@@ -29,12 +31,25 @@ class HomepageViewSet(viewsets.ViewSet):
 
 class AuthorViewSet(ModelViewSet):
     """
-    Applying pagination come with several bugs and forces us to
-    create custome update and create methods for handling user update and create
-    we should find a work around or implement the update and create methods
-    This bug is avaiable only at this end point the posts endpoint pagination
-    seems to work well so dose the categories endpoint pagination
+    /authors/
+    In this end point we list all authors for everyone to see
+
+    /authors/<id>/
+    View a specific user profile
+    + All user and author fields are provided
+    + All posts related to the the author are Visible here
+
+    /authors/me/
+    in this endpoint we get the logged in user and show the logged in user their profile
+    which can be editted
+    Note : This is the end point where they may complete their profile
     """
+
+    # Applying pagination come with several bugs and forces us to
+    # create custome update and create methods for handling user update and create
+    # we should find a work around or implement the update and create methods
+    # This bug is avaiable only at this end point the posts endpoint pagination
+    # seems to work well so dose the categories endpoint pagination
 
     queryset = Author.objects.prefetch_related("user").all()
     serializer_class = SimpleAuthorSerializer
@@ -62,6 +77,16 @@ class AuthorViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+    @action(detail=True, methods=["GET"])
+    def posts(self, request, pk=None):
+        """
+        Retrieve all posts of a specific author
+        """
+        author = self.get_object()
+        posts = author.post_set.all()
+        serializer = SimplePostSerializer(posts, many=True)
+        return Response(serializer.data)
 
 
 class PostViewSet(ModelViewSet):
@@ -97,3 +122,15 @@ class CategoryViewSet(ModelViewSet):
         if self.request.method == "POST":
             return [IsAuthenticated()]
         return super().get_permissions()
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return CategoryWithPostsSerializer
+        return CategorySerializer
+
+    @action(detail=True, methods=["GET"])
+    def posts(self, request, pk=None):
+        category = self.get_object()
+        posts = category.posts.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)

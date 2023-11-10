@@ -53,7 +53,9 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     slug = AutoSlugField(populate_from="title", unique=True, null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    category = models.ForeignKey(
+        Category, related_name="posts", on_delete=models.PROTECT
+    )
     posted_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT)
