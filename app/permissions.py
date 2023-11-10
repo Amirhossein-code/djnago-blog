@@ -29,3 +29,13 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Check if the user is the owner of the object
         return obj.owner == request.user
+
+
+class IsAuthorOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Allow GET, HEAD, and OPTIONS requests for all users
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Check if the requesting user is the author of the post
+        return obj.author == request.user.author
