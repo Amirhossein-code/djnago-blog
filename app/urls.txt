@@ -1,6 +1,6 @@
 Djoser Endpoints (Authentication BackEnd)
 /users/                                 See users 
-/users/me/                              See the logged in user
+/users/me/                              See the logged in user User Model
 /users/confirm/
 /users/resend_activation/
 /users/set_password/
@@ -18,7 +18,7 @@ Djoser Endpoints (Authentication BackEnd)
 
 Authors end-points 
 /authors/                  List all Authors 
-/authors/<id>              see a specific author 
+/authors/<id>              see a specific author with 2 posts 
 /authors/me                logged in user can see profile 
 /authors/<id>/posts        see all posts of the given author id
 

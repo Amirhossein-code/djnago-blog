@@ -11,6 +11,7 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 from .serializers import (
+    AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
     PostSerializer,
     CategorySerializer,
@@ -30,35 +31,15 @@ class HomepageViewSet(viewsets.ViewSet):
 
 
 class AuthorViewSet(ModelViewSet):
-    """
-    /authors/
-    In this end point we list all authors for everyone to see
-
-    /authors/<id>/
-    View a specific user profile
-    + All user and author fields are provided
-    + All posts related to the the author are Visible here
-
-    /authors/me/
-    in this endpoint we get the logged in user and show the logged in user their profile
-    which can be editted
-    Note : This is the end point where they may complete their profile
-    """
-
-    # Applying pagination come with several bugs and forces us to
-    # create custome update and create methods for handling user update and create
-    # we should find a work around or implement the update and create methods
-    # This bug is avaiable only at this end point the posts endpoint pagination
-    # seems to work well so dose the categories endpoint pagination
-
     queryset = Author.objects.prefetch_related("user").all()
     serializer_class = SimpleAuthorSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-    # pagination_class = AuthorsPagination
     def get_serializer_class(self):
-        if self.action == "retrieve":
+        if self.action == "me":
             return AuthorSerializer
+        if self.action == "retrieve":
+            return AuthorWithPostSerializer
         return SimpleAuthorSerializer
 
     @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
@@ -68,6 +49,7 @@ class AuthorViewSet(ModelViewSet):
         This endpoint is the only place they can complete all their user
         related stuff All the author models fields
         """
+        serializer_class = AuthorSerializer
         author = Author.objects.get(user_id=request.user.id)
         if request.method == "GET":
             serializer = AuthorSerializer(author)
