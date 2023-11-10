@@ -27,7 +27,15 @@ class SimplePostSerializer(serializers.ModelSerializer):
             "title",
             "content",
             "category",
-            "slug",
+        ]
+
+
+class IntroPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "title",
         ]
 
 
@@ -53,9 +61,9 @@ class CategoryWithPostsSerializer(serializers.ModelSerializer):
             "posts",
         ]
 
-    def get_posts(self, author):
-        posts = author.post_set.all()[:2]
-        serializer = SimplePostSerializer(posts, many=True)
+    def get_posts(self, category):
+        posts = category.posts.all()[:2]
+        serializer = SimplePostSerializer(posts, many=True, read_only=True)
         return serializer.data
 
 
@@ -116,7 +124,6 @@ class SimpleAuthorSerializer(serializers.ModelSerializer):
             "id",
             "first_name",
             "last_name",
-            "slug",
             "bio",
             "profile_image",
         ]

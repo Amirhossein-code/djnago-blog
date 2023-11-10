@@ -18,10 +18,14 @@ from .serializers import (
     AuthorSerializer,
     SimpleAuthorSerializer,
     SimplePostSerializer,
-    # SimplePostSerializer,
 )
 from .models import Post, Category, Author
-from .pagination import PostsPagination, AuthorsPagination, CategoriesPagination
+from .pagination import (
+    FilteredPostsPagination,
+    PostsPagination,
+    AuthorsPagination,
+    CategoriesPagination,
+)
 from .permissions import IsAdminOrReadOnly
 
 
@@ -34,6 +38,7 @@ class AuthorViewSet(ModelViewSet):
     queryset = Author.objects.prefetch_related("user").all()
     serializer_class = SimpleAuthorSerializer
     permission_classes = [IsAdminOrReadOnly]
+    pagination_class = AuthorsPagination
 
     def get_serializer_class(self):
         if self.action == "me":
@@ -49,7 +54,6 @@ class AuthorViewSet(ModelViewSet):
         This endpoint is the only place they can complete all their user
         related stuff All the author models fields
         """
-        serializer_class = AuthorSerializer
         author = Author.objects.get(user_id=request.user.id)
         if request.method == "GET":
             serializer = AuthorSerializer(author)
@@ -60,7 +64,12 @@ class AuthorViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-    @action(detail=True, methods=["GET"])
+    @action(
+        detail=True,
+        methods=["GET"],
+        permission_classes=[IsAuthenticated],
+        pagination_class=FilteredPostsPagination,
+    )
     def posts(self, request, pk=None):
         """
         Retrieve all posts of a specific author
@@ -104,9 +113,14 @@ class CategoryViewSet(ModelViewSet):
             return CategoryWithPostsSerializer
         return CategorySerializer
 
-    @action(detail=True, methods=["GET"])
+    @action(
+        detail=True,
+        methods=["GET"],
+        permission_classes=[IsAuthenticated],
+        pagination_class=FilteredPostsPagination,
+    )
     def posts(self, request, pk=None):
         category = self.get_object()
         posts = category.posts.all()
-        serializer = PostSerializer(posts, many=True)
+        serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)

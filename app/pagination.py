@@ -5,6 +5,10 @@ class PostsPagination(PageNumberPagination):
     page_size = 10
 
 
+class FilteredPostsPagination(PageNumberPagination):
+    page_size = 20
+
+
 class AuthorsPagination(PageNumberPagination):
     page_size = 20
 

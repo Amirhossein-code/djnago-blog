@@ -1,7 +1,7 @@
 Djoser Endpoints (Authentication BackEnd)
-/users/                                 See users 
-/users/me/                              See the logged in user User Model
-/users/confirm/
+/users/                                                See users 
+/users/me/                                             See the logged in user User Model fields
+/users/confirm/                                                             
 /users/resend_activation/
 /users/set_password/
 /users/reset_password/
@@ -9,11 +9,8 @@ Djoser Endpoints (Authentication BackEnd)
 /users/set_username/
 /users/reset_username/
 /users/reset_username_confirm/
-
-/jwt/create/ (JSON Web Token Authentication)
-
+/jwt/create/ (JSON Web Token Authentication)           
 /jwt/refresh/ (JSON Web Token Authentication)
-
 /jwt/verify/ (JSON Web Token Authentication)
 
 Authors end-points 
@@ -22,12 +19,14 @@ Authors end-points
 /authors/me                logged in user can see profile 
 /authors/<id>/posts        see all posts of the given author id
 
+Posts Endpoint
 /posts                  List all posts 
 /posts/<id>             see specific post
 /posts/id/reviews       see post reviews
 /posts/id/reviews/<id>  see a specific post reviews
 
-/categories          list all categories 
-/categories/<id>     see specific category with related posts (Just Into level need to implement filteration to show a number of best posts)
-/categories/<id>/    posts see all posts of a specific category
+Categories Endpoint
+/categories                 list all categories 
+/categories/<id>            see specific category with related posts (Just Into level need to implement filteration to show a number of best posts)
+/categories/<id>/posts      see all posts of a specific category
 
