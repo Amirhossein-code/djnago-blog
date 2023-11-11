@@ -1,3 +1,5 @@
+Endpoint OverView:
+
 Djoser Endpoints (Authentication BackEnd)
 /users/                                                See users 
 /users/me/                                             See the logged in user User Model fields

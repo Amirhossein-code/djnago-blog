@@ -43,8 +43,6 @@ class RetrievePostReviewSerializer(serializers.ModelSerializer):
 
 
 class AuthorReviewSerializer(serializers.ModelSerializer):
-    # This end point is bugged a single reviwe of an author is visble at other end points
-    # fix later
     user = serializers.ReadOnlyField(source="user.username")
 
     class Meta:
@@ -64,11 +62,21 @@ class AuthorReviewSerializer(serializers.ModelSerializer):
 
 
 class RetrieveAuthorReviewSerializer(serializers.ModelSerializer):
+    # user id of the person who posted the review
     user = serializers.ReadOnlyField(source="user.username")
-    # author_id = serializers.ReadOnlyField(source="user.author.id")
-    author_id = serializers.ReadOnlyField(source="author.id")
-    author = serializers.StringRelatedField()
+    # author id of the person who posted the review
+    author_id_posting_review = serializers.ReadOnlyField(source="user.author.id")
+    # author that is being reviewed
+    author_id_being_reviewed = serializers.SerializerMethodField()
+    # author dose the same thing as above line but the naming is misleading
 
     class Meta:
         model = AuthorReview
-        fields = ReviewSerializer.Meta.fields + ["author", "author_id"]
+        fields = ReviewSerializer.Meta.fields + [
+            "author",
+            "author_id_being_reviewed",
+            "author_id_posting_review",
+        ]
+
+    def get_author_id_being_reviewed(self, obj):
+        return self.context.get("author_id")
