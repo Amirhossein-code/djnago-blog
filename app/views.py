@@ -86,7 +86,7 @@ class AuthorViewSet(ModelViewSet):
         Retrieve all posts of a specific author
         """
         author = self.get_object()
-        posts = author.post_set.all()
+        posts = author.posts.all()
         serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)
 
@@ -105,27 +105,9 @@ class PostViewSet(ModelViewSet):
     )
     def my_posts(self, request):
         author = request.user.author
-        posts = author.my_posts.all()
+        posts = author.posts.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
-
-    # Currently handeled by Cstome permission class
-    # def perform_create(self, serializer):
-    #     author = self.request.user.author
-    #     serializer.save(author=author)
-
-    # def perform_destroy(self, instance):
-    #     if instance.author != self.request.user.author:
-    #         raise PermissionDenied("You do not have permission to delete this post.")
-
-    #     instance.delete()
-
-    # def perform_update(self, serializer):
-    #     instance = serializer.instance
-    #     if instance.author != self.request.user.author:
-    #         raise PermissionDenied("You do not have permission to update this post.")
-
-    #     serializer.save()
 
 
 class CategoryViewSet(ModelViewSet):

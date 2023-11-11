@@ -33,9 +33,18 @@ class PostReviewSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+class RetrievePostReviewSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source="user.username")
+    author_id = serializers.ReadOnlyField(source="user.author.id")
+
+    class Meta:
+        model = PostReview
+        fields = ReviewSerializer.Meta.fields + ["post", "author_id"]
+
+
 class AuthorReviewSerializer(serializers.ModelSerializer):
-    # This end point is bugged a single reviwe of an author is visble at other end points 
-    # fix later 
+    # This end point is bugged a single reviwe of an author is visble at other end points
+    # fix later
     user = serializers.ReadOnlyField(source="user.username")
 
     class Meta:
@@ -52,5 +61,14 @@ class AuthorReviewSerializer(serializers.ModelSerializer):
         validated_data["user"] = user
 
         return super().create(validated_data)
-    
-    
+
+
+class RetrieveAuthorReviewSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source="user.username")
+    # author_id = serializers.ReadOnlyField(source="user.author.id")
+    author_id = serializers.ReadOnlyField(source="author.id")
+    author = serializers.StringRelatedField()
+
+    class Meta:
+        model = AuthorReview
+        fields = ReviewSerializer.Meta.fields + ["author", "author_id"]
