@@ -14,12 +14,13 @@ from .serializers import (
     RetrievePostReviewSerializer,
 )
 from .pagination import PostReviewPagination, AuthorReviewPagination
+from .permissions import IsReviewOwnerOrReadOnly
 
 
 class AuthorReviewViewSet(ModelViewSet):
     queryset = AuthorReview.objects.all()
     serializer_class = AuthorReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsReviewOwnerOrReadOnly]
     pagination_class = AuthorReviewPagination
 
     def get_serializer_class(self, *args, **kwargs):
@@ -43,7 +44,7 @@ class AuthorReviewViewSet(ModelViewSet):
 class PostReviewViewSet(ModelViewSet):
     queryset = PostReview.objects.all()
     serializer_class = PostReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsReviewOwnerOrReadOnly]
     pagination_class = PostReviewPagination
 
     def get_serializer_class(self, *args, **kwargs):

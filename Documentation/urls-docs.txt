@@ -17,14 +17,16 @@ Authors end-points
 /authors/                  List all Authors 
 /authors/<id>              see a specific author with 2 posts 
 /authors/me                logged in user can see profile 
-/authors/<id>/posts        see all posts of the given author id
+/authors/<id>/posts           see all posts of the given author id
+/authors/<id>/reviews         See all related author reviews
+/authors/<id>/reviews/<id>    See specific review / Update 
 
 Posts Endpoint
-/posts                  List all posts 
-/posts/my_posts         See all logged in users posts
-/posts/<id>             see specific post
-/posts/id/reviews       see post reviews
-/posts/id/reviews/<id>  see a specific post reviews
+/posts                         List all posts 
+/posts/my_posts                See all logged in users posts
+/posts/<id>                    see specific post
+/posts/<id>/reviews            see post reviews
+/posts/<id>/reviews/<id>       see a specific post reviews
 
 Categories Endpoint
 /categories                 list all categories 
