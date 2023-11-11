@@ -4,7 +4,7 @@ from .models import Post, Category, Author
 
 # Post Serializers
 class PostSerializer(serializers.ModelSerializer):
-    author_id = serializers.IntegerField(source="author.id", read_only=True)
+    author_id = serializers.IntegerField(source="user.author.id", read_only=True)
 
     class Meta:
         model = Post
@@ -18,6 +18,13 @@ class PostSerializer(serializers.ModelSerializer):
             "posted_at",
             "last_updated",
         ]
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+            validated_data["author"] = user.author
+        return super().create(validated_data)
 
 
 class SimplePostSerializer(serializers.ModelSerializer):

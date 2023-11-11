@@ -61,6 +61,9 @@ class AuthorViewSet(ModelViewSet):
         Users can see their own profile using this endpoint
         This endpoint is the only place they can complete all their user
         related stuff All the author models fields
+        Note : for implementing the first_name , ... the  User model fields
+        Use the User model Endpoints provided by djoser check urls-docs for
+        more info
         """
         author = Author.objects.get(user_id=request.user.id)
         if request.method == "GET":
@@ -84,6 +87,8 @@ class AuthorViewSet(ModelViewSet):
     def posts(self, request, pk=None):
         """
         Retrieve all posts of a specific author
+        Not used for retreving all posts of the logged in user
+        check out : /posts/my_posts
         """
         author = self.get_object()
         posts = author.posts.all()
@@ -97,10 +102,13 @@ class PostViewSet(ModelViewSet):
     permission_classes = [IsAuthorOrReadOnly]
     pagination_class = PostsPagination
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user.author)
+
     @action(
         detail=False,
         methods=["GET"],
-        url_path="my_posts",
+        url_path="my-posts",
         permission_classes=[IsAuthorOrReadOnly],
     )
     def my_posts(self, request):
