@@ -13,6 +13,8 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
+
+from app.filters import PostFilter
 from .models import Post, Category, Author
 from .serializers import (
     AuthorWithPostSerializer,
@@ -108,9 +110,17 @@ class PostViewSet(ModelViewSet):
         the author should be directed to the page of the post /posts/<id>
         then if the logged in user is the owner of that post they can edit
         or delete thier post
-        Bug :
-        when the owner views the post at /posts/id they can change the author
-        the author should be passed automatically
+    Filtering implemented :
+    users can also filter by more than 1 field
+        category
+        author
+        posted at
+            set 2 values to search the posts between the specified
+            times provided
+            Note : the fields are datetime fileds
+            so the correct way would be
+                2023-11-12T00:00:00Z
+
     """
 
     queryset = Post.objects.prefetch_related("category", "author").all()
@@ -118,7 +128,7 @@ class PostViewSet(ModelViewSet):
     permission_classes = [IsAuthorOrReadOnly]
     pagination_class = PostsPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["category_id", "author_id"]
+    filterset_class = PostFilter
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -135,10 +145,7 @@ class PostViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-
-        # Add custom context data here
         context["user"] = self.request.user
-
         return context
 
     @action(

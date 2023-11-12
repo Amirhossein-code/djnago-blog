@@ -21,18 +21,8 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    # class Meta:
-    #     model = Post
-    #     fields = [
-    #         "id",
-    #         "author",
-    #         "title",
-    #         "content",
-    #         "slug",
-    #         "category",
-    #         "posted_at",
-    #         "last_updated",
-    #     ]
+    author = serializers.CharField(source="author.id", read_only=True)
+
     class Meta:
         model = Post
         fields = [
@@ -45,18 +35,6 @@ class PostSerializer(serializers.ModelSerializer):
             "posted_at",
             "last_updated",
         ]
-        read_only_fields = ("author",)
-
-    def to_representation(self, instance):
-        # Check if the current user is the owner of the post
-        user = self.context["request"].user
-        is_owner = user.is_authenticated and user.author == instance.author
-
-        # Exclude the 'author' field if the user is the owner
-        if is_owner:
-            self.fields.pop("author")
-
-        return super().to_representation(instance)
 
 
 class MyPostsSerializer(serializers.ModelSerializer):
