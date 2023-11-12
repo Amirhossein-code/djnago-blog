@@ -7,9 +7,9 @@ from .models import Post, Author, Category
 
 class PostFilter(FilterSet):
     posted_at = filters.DateTimeFromToRangeFilter()
+    last_updated = filters.DateTimeFromToRangeFilter()
 
     def filter_posted_at_lt(self, queryset, name, value):
-        # Set default vlaue for the lt filed
         if not value:
             value = datetime.now()
         return queryset.filter(**{f"{name}__lt": value})
@@ -19,6 +19,8 @@ class PostFilter(FilterSet):
         fields = {
             "category_id": ["exact"],
             "author_id": ["exact"],
+            "content": ["icontains"],
+            "title": ["icontains"],
         }
 
 
@@ -34,15 +36,15 @@ class AuthorFilter(FilterSet):
     class Meta:
         model = Author
         fields = {
-            "user__first_name": ["exact"],
-            "user__last_name": ["exact"],
-            "user__username": ["exact"],
+            "user__first_name": ["icontains"],
+            "user__last_name": ["icontains"],
+            "user__username": ["icontains"],
+            "user__email": ["icontains"],
+            "bio": ["icontains"],
         }
 
 
 class CategoryFilter(django_filters.FilterSet):
-    title = django_filters.CharFilter(lookup_expr="icontains")
-
     class Meta:
         model = Category
-        fields = ["title"]
+        fields = {"title": ["icontains"]}
