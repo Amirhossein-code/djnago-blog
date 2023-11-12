@@ -24,6 +24,7 @@ class Author(models.Model):
     )
 
     def get_author_slug(self):
+        # we can not use str method inside populate from
         return f"{self.user.first_name} {self.user.last_name}"
 
     def __str__(self):

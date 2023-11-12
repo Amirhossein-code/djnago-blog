@@ -14,7 +14,7 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 
-from app.filters import PostFilter
+from .filters import AuthorFilter, CategoryFilter, PostFilter
 from .models import Post, Category, Author
 from .serializers import (
     AuthorWithPostSerializer,
@@ -47,6 +47,8 @@ class AuthorViewSet(ModelViewSet):
     serializer_class = SimpleAuthorSerializer
     permission_classes = [IsAdminOrReadOnly]
     pagination_class = AuthorsPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = AuthorFilter
 
     def get_serializer_class(self):
         if self.action == "me":
@@ -166,6 +168,8 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
     pagination_class = CategoriesPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CategoryFilter
 
     def get_permissions(self):
         if self.request.method == "POST":
