@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from .models import Post, Category, Author
+from .models import AuthorSocialMedia, Post, Category, Author, SocialMediaURL
 
 
 # Post Serializers
@@ -107,6 +107,30 @@ class CategoryWithPostsSerializer(serializers.ModelSerializer):
         posts = category.posts.all()[:2]
         serializer = IntroPostSerializer(posts, many=True, read_only=True)
         return serializer.data
+
+
+# Social medi serializers
+class SocialMediaURLSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialMediaURL
+        fields = ["url"]
+
+
+class AuthorSocialMediaSerializer(serializers.ModelSerializer):
+    social_media_urls = SocialMediaURLSerializer(many=True)
+
+    class Meta:
+        model = AuthorSocialMedia
+        fields = ["social_media_urls"]
+
+
+# sample implementation
+# class AuthorSerializer(serializers.ModelSerializer):
+#     social_media = AuthorSocialMediaSerializer()
+
+#     class Meta:
+#         model = Author
+#         fields = ["id", "username", "email", "social_media"]
 
 
 # Author serialziers

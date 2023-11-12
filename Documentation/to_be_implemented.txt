@@ -1,3 +1,10 @@
+tagging 
+like
+filtering and Searching
+Implemented 
+the serializers might need adjustments
+Project has a few untested features that should be taken care of
+################################################################################
 - SMTP server for authenticating emails
 - Email Notifications.
 - Social Media field for author model

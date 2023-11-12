@@ -49,6 +49,18 @@ class Author(models.Model):
         ordering = ["user__first_name", "user__last_name"]
 
 
+class AuthorSocialMedia(models.Model):
+    author = models.OneToOneField(Author, on_delete=models.CASCADE)
+    website_url = models.URLField()
+
+
+class SocialMediaURL(models.Model):
+    author_social_media = models.ForeignKey(
+        AuthorSocialMedia, on_delete=models.CASCADE, related_name="social_media_urls"
+    )
+    url = models.URLField()
+
+
 class Category(models.Model):
     title = models.CharField(max_length=188)
     slug = AutoSlugField(populate_from="title", unique=True, null=True, blank=True)
