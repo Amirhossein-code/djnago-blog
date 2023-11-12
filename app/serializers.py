@@ -19,15 +19,20 @@ class CreatePostSerializer(serializers.ModelSerializer):
             "last_updated",
         ]
 
-    def create(self, validated_data):
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            user = request.user
-            validated_data["author"] = user.author
-        return super().create(validated_data)
 
-
-class ListPostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
+    # class Meta:
+    #     model = Post
+    #     fields = [
+    #         "id",
+    #         "author",
+    #         "title",
+    #         "content",
+    #         "slug",
+    #         "category",
+    #         "posted_at",
+    #         "last_updated",
+    #     ]
     class Meta:
         model = Post
         fields = [
@@ -40,6 +45,18 @@ class ListPostSerializer(serializers.ModelSerializer):
             "posted_at",
             "last_updated",
         ]
+        read_only_fields = ("author",)
+
+    def to_representation(self, instance):
+        # Check if the current user is the owner of the post
+        user = self.context["request"].user
+        is_owner = user.is_authenticated and user.author == instance.author
+
+        # Exclude the 'author' field if the user is the owner
+        if is_owner:
+            self.fields.pop("author")
+
+        return super().to_representation(instance)
 
 
 class MyPostsSerializer(serializers.ModelSerializer):

@@ -22,7 +22,7 @@ from .serializers import (
     CategorySerializer,
     AuthorSerializer,
     MyPostsSerializer,
-    ListPostSerializer,
+    PostSerializer,
     SimpleAuthorSerializer,
     SimplePostSerializer,
 )
@@ -108,29 +108,38 @@ class PostViewSet(ModelViewSet):
         the author should be directed to the page of the post /posts/<id>
         then if the logged in user is the owner of that post they can edit
         or delete thier post
+        Bug :
+        when the owner views the post at /posts/id they can change the author
+        the author should be passed automatically
     """
 
     queryset = Post.objects.prefetch_related("category", "author").all()
-    serializer_class = ListPostSerializer
+    serializer_class = PostSerializer
     permission_classes = [IsAuthorOrReadOnly]
     pagination_class = PostsPagination
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["category_id", "author_id"]
 
     def get_serializer_class(self):
-        if self.action == "list":
-            return ListPostSerializer
         if self.action == "create":
             return CreatePostSerializer
         if self.action == "my-posts":
             return MyPostsSerializer
-        return ListPostSerializer
+        return PostSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user.author)
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user.author)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+
+        # Add custom context data here
+        context["user"] = self.request.user
+
+        return context
 
     @action(
         detail=False,
