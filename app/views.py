@@ -15,7 +15,7 @@ from rest_framework.permissions import (
 )
 
 from .filters import AuthorFilter, CategoryFilter, PostFilter
-from .models import Post, Category, Author
+from .models import Post, Category, Author, Like
 from .serializers import (
     AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
@@ -57,6 +57,12 @@ class AuthorViewSet(ModelViewSet):
             return AuthorWithPostSerializer
 
         return SimpleAuthorSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        author_id = self.kwargs.get("pk")
+        context["author_id"] = author_id
+        return context
 
     @action(
         detail=False,
@@ -101,6 +107,26 @@ class AuthorViewSet(ModelViewSet):
         posts = author.posts.all()
         serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
+    def toggle_like(self, request, pk=None):
+        author = self.get_object()
+        user = request.user
+
+        try:
+            like = author.likes.get(user=user)
+            liked = True
+
+            # Unlike the author
+            like.delete()
+            liked = False
+
+        except Like.DoesNotExist:
+            # Like the author
+            like = Like.objects.create(user=user, author=author)
+            liked = True
+
+        return Response({"liked": liked})
 
 
 class PostViewSet(ModelViewSet):
