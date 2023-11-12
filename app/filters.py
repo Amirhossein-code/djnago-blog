@@ -1,5 +1,7 @@
+from django.db.models import Manager
 from datetime import datetime
 from django_filters.rest_framework import FilterSet
+from django_filters import CharFilter
 import django_filters
 from django_filters import rest_framework as filters
 from .models import Post, Author, Category
@@ -8,6 +10,7 @@ from .models import Post, Author, Category
 class PostFilter(FilterSet):
     posted_at = filters.DateTimeFromToRangeFilter()
     last_updated = filters.DateTimeFromToRangeFilter()
+    tags__name = CharFilter(field_name="tags__name", lookup_expr="icontains")
 
     def filter_posted_at_lt(self, queryset, name, value):
         if not value:
@@ -26,6 +29,7 @@ class PostFilter(FilterSet):
 
 class AuthorFilter(FilterSet):
     joined_at = filters.DateTimeFromToRangeFilter()
+    tags__name = CharFilter(field_name="tags__name", lookup_expr="icontains")
 
     def filter_joined_at_lt(self, queryset, name, value):
         # Set default value for the lt field
@@ -44,7 +48,11 @@ class AuthorFilter(FilterSet):
         }
 
 
-class CategoryFilter(django_filters.FilterSet):
+class CategoryFilter(FilterSet):
+    tags__name = CharFilter(field_name="tags__name", lookup_expr="icontains")
+
     class Meta:
         model = Category
-        fields = {"title": ["icontains"]}
+        fields = {
+            "title": ["icontains"],
+        }

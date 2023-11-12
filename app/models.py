@@ -23,7 +23,7 @@ class Author(models.Model):
         null=True,
         blank=True,
     )
-    # tags = TaggableManager()
+    tags = TaggableManager()
 
     def get_author_slug(self):
         # we can not use str method inside populate from
