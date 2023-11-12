@@ -42,7 +42,9 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         ]
 
 
-class MyPostsSerializer(serializers.ModelSerializer):
+class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
     class Meta:
         model = Post
         fields = [
@@ -53,6 +55,7 @@ class MyPostsSerializer(serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
+            "tags",
         ]
 
 
@@ -134,11 +137,12 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
         return serializer.data
 
 
-class AuthorSerializer(serializers.ModelSerializer):
+class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Author
@@ -153,12 +157,14 @@ class AuthorSerializer(serializers.ModelSerializer):
             "birth_date",
             "bio",
             "profile_image",
+            "tags",
         ]
 
 
 class SimpleAuthorSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Author
@@ -168,4 +174,5 @@ class SimpleAuthorSerializer(serializers.ModelSerializer):
             "last_name",
             "bio",
             "profile_image",
+            "tags",
         ]
