@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import viewsets, status
@@ -17,9 +18,11 @@ from .serializers import (
     AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
     IntroPostSerializer,
-    PostSerializer,
+    CreatePostSerializer,
     CategorySerializer,
     AuthorSerializer,
+    MyPostsSerializer,
+    ListPostSerializer,
     SimpleAuthorSerializer,
     SimplePostSerializer,
 )
@@ -97,12 +100,36 @@ class AuthorViewSet(ModelViewSet):
 
 
 class PostViewSet(ModelViewSet):
+    """
+    We list all posts that have been posted here  /posts
+    all authors that want to post post to this end point
+    logged in user can view all of their posts at /posts/my_posts
+    Post Owner operations
+        the author should be directed to the page of the post /posts/<id>
+        then if the logged in user is the owner of that post they can edit
+        or delete thier post
+    """
+
     queryset = Post.objects.prefetch_related("category", "author").all()
-    serializer_class = PostSerializer
+    serializer_class = ListPostSerializer
     permission_classes = [IsAuthorOrReadOnly]
     pagination_class = PostsPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["category_id", "author_id"]
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ListPostSerializer
+        if self.action == "create":
+            return CreatePostSerializer
+        if self.action == "my-posts":
+            return MyPostsSerializer
+        return ListPostSerializer
 
     def perform_create(self, serializer):
+        serializer.save(author=self.request.user.author)
+
+    def perform_update(self, serializer):
         serializer.save(author=self.request.user.author)
 
     @action(
@@ -114,7 +141,7 @@ class PostViewSet(ModelViewSet):
     def my_posts(self, request):
         author = request.user.author
         posts = author.posts.all()
-        serializer = PostSerializer(posts, many=True)
+        serializer = MyPostsSerializer(posts, many=True)
         return Response(serializer.data)
 
 

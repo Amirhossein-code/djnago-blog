@@ -1,6 +1,6 @@
 Endpoint OverView:
 
-Djoser Endpoints (Authentication BackEnd)
+Djoser Endpoints (Authentication BackEnd) prefix all with /auth/
 /users/                                                See users 
 /users/me/                                             See the logged in user User Model fields
 /users/confirm/                                                             

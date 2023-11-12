@@ -3,7 +3,7 @@ from .models import Post, Category, Author
 
 
 # Post Serializers
-class PostSerializer(serializers.ModelSerializer):
+class CreatePostSerializer(serializers.ModelSerializer):
     author_id = serializers.IntegerField(source="user.author.id", read_only=True)
 
     class Meta:
@@ -25,6 +25,35 @@ class PostSerializer(serializers.ModelSerializer):
             user = request.user
             validated_data["author"] = user.author
         return super().create(validated_data)
+
+
+class ListPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "author",
+            "title",
+            "content",
+            "slug",
+            "category",
+            "posted_at",
+            "last_updated",
+        ]
+
+
+class MyPostsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "title",
+            "content",
+            "slug",
+            "category",
+            "posted_at",
+            "last_updated",
+        ]
 
 
 class SimplePostSerializer(serializers.ModelSerializer):
