@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework",
     "djoser",
+    "taggit",
     "app",
     "review",
     "core",

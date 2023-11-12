@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 from autoslug import AutoSlugField
+from taggit.managers import TaggableManager
 
 
 class Author(models.Model):
@@ -22,6 +23,7 @@ class Author(models.Model):
         null=True,
         blank=True,
     )
+    # tags = TaggableManager()
 
     def get_author_slug(self):
         # we can not use str method inside populate from
@@ -45,6 +47,7 @@ class Author(models.Model):
 class Category(models.Model):
     title = models.CharField(max_length=188)
     slug = AutoSlugField(populate_from="title", unique=True, null=True, blank=True)
+    tags = TaggableManager()
 
     def __str__(self):
         return self.title
@@ -60,6 +63,7 @@ class Post(models.Model):
     posted_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT, related_name="posts")
+    # tags = TaggableManager()
 
     def __str__(self):
         return self.title

@@ -15,6 +15,7 @@ django-debug-toolbar = "*"
 pillow = "*"
 django-autoslug = "*"
 django-filter = "*"
+django-taggit = "*"
 
 [dev-packages]
 pytest = "*"
