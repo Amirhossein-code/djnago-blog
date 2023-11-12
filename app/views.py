@@ -164,6 +164,13 @@ class PostViewSet(ModelViewSet):
 
 
 class CategoryViewSet(ModelViewSet):
+    """
+    Generally the creation of categories and tags should be done by admins
+    So that the category endpoint may not be abused
+    but in this case due to lack of categories Users are allowed
+    to Post to categories end point
+    """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]

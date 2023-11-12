@@ -1,10 +1,12 @@
 from rest_framework import serializers
+from taggit.serializers import TagListSerializerField, TaggitSerializer
 from .models import Post, Category, Author
 
 
 # Post Serializers
-class CreatePostSerializer(serializers.ModelSerializer):
+class CreatePostSerializer(TaggitSerializer, serializers.ModelSerializer):
     author_id = serializers.IntegerField(source="user.author.id", read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Post
@@ -17,11 +19,13 @@ class CreatePostSerializer(serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
+            "tags",
         ]
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     author = serializers.CharField(source="author.id", read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Post
@@ -34,6 +38,7 @@ class PostSerializer(serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
+            "tags",
         ]
 
 
@@ -55,7 +60,6 @@ class SimplePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = [
-            "id",
             "title",
             "content",
             "category",
@@ -66,19 +70,21 @@ class IntroPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = [
-            "id",
             "title",
         ]
 
 
 # Category serialziers
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
     class Meta:
         model = Category
         fields = [
             "id",
             "title",
             "slug",
+            "tags",
         ]
 
 
