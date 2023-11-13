@@ -1,12 +1,10 @@
 from rest_framework import serializers
-from taggit.serializers import TagListSerializerField, TaggitSerializer
 from .models import AuthorSocialMedia, Post, Category, Author, SocialMediaURL
 
 
 # Post Serializers
-class CreatePostSerializer(TaggitSerializer, serializers.ModelSerializer):
+class CreatePostSerializer(serializers.ModelSerializer):
     author_id = serializers.IntegerField(source="user.author.id", read_only=True)
-    tags = TagListSerializerField()
 
     class Meta:
         model = Post
@@ -19,13 +17,11 @@ class CreatePostSerializer(TaggitSerializer, serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
-            "tags",
         ]
 
 
-class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source="author.id", read_only=True)
-    tags = TagListSerializerField()
 
     class Meta:
         model = Post
@@ -38,13 +34,10 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
-            "tags",
         ]
 
 
-class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
-
+class MyPostsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = [
@@ -55,7 +48,6 @@ class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
-            "tags",
         ]
 
 
@@ -78,16 +70,13 @@ class IntroPostSerializer(serializers.ModelSerializer):
 
 
 # Category serialziers
-class CategorySerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
-
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = [
             "id",
             "title",
             "slug",
-            "tags",
         ]
 
 
@@ -161,12 +150,11 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
         return serializer.data
 
 
-class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
-    tags = TagListSerializerField()
     is_liked_by_user = serializers.SerializerMethodField()
 
     class Meta:
@@ -182,7 +170,6 @@ class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
             "birth_date",
             "bio",
             "profile_image",
-            "tags",
             "is_liked_by_user",
         ]
 
@@ -194,7 +181,6 @@ class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
 class SimpleAuthorSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
-    tags = TagListSerializerField()
 
     class Meta:
         model = Author
@@ -204,14 +190,12 @@ class SimpleAuthorSerializer(serializers.ModelSerializer):
             "last_name",
             "bio",
             "profile_image",
-            "tags",
         ]
 
 
 class SimpleAuthorWithLikeSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
-    tags = TagListSerializerField()
     is_liked_by_user = serializers.SerializerMethodField()
 
     class Meta:
@@ -222,7 +206,6 @@ class SimpleAuthorWithLikeSerializer(serializers.ModelSerializer):
             "last_name",
             "bio",
             "profile_image",
-            "tags",
             "is_liked_by_user",
         ]
 
