@@ -112,3 +112,5 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
     "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
 }
+
+TAGGIT_CASE_INSENSITIVE = True

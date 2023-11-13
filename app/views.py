@@ -138,6 +138,7 @@ class PostViewSet(ModelViewSet):
         the author should be directed to the page of the post /posts/<id>
         then if the logged in user is the owner of that post they can edit
         or delete thier post
+        custom permission is implemented for this use
     Filtering implemented :
     users can also filter by more than 1 field
         category
