@@ -1,58 +1,22 @@
-tagging 
-like
-filtering and Searching
-Implemented 
-the serializers might need adjustments
-Project has a few untested features that should be taken care of
+Current status :
+    Likes app implemented partially
+    likely to be bugged 
+    the implementation needs to be improved 
 ################################################################################
 - SMTP server for authenticating emails
-- Email Notifications.
-- Social Media field for author model
-- Seprate Profile Image from the author app
-- likes app just like reviews app
-- implement tags for taging author and posts
-- Filtering and Searching
-- Improve admin Implementations
+- Improve admin panel Implementations
 - Testing
   - pytest tests for all behaviuors
   - loctus
 - getting ready for deployment
 - Docker implementation
 
-additional implementations provided by AI
-User Profile Customization:
 
-Allow users to customize their profiles by adding additional information such as a bio, website URL, location,
-or profile cover image. This personalization can enhance the user experience and engagement.
-User Notifications:
 
-Implement a notification system to keep users informed about relevant activities, such as new comments on their blog posts,
-replies to their comments, or updates from followed authors.
-Related Posts:
 
-Display a section on each blog post page to suggest related or similar posts based on tags, categories, or other criteria.
-This feature can help users discover more content and increase engagement.
-User Activity Feeds:
 
-Create activity feeds for users to showcase their recent actions, such as published blog posts, liked/favorited posts,
-or comments made. This feature can enhance user profiles and foster a sense of community.
-Content Sharing:
 
-Implement social media sharing buttons on blog posts to allow users to easily share content on platforms like Twitter,
-Facebook, or LinkedIn. This can help increase the reach and visibility of your weblog.
-Rich Text Editor:
 
-Enhance the blog post creation/editing interface with a rich text editor that supports formatting options, image uploads,
-and other multimedia elements. This can provide authors with more flexibility and creativity in their content creation.
-Multilingual Support:
 
-Consider adding multilingual support to your weblog, allowing users to view content in different languages.
-This can help expand your audience and cater to a more diverse user base.
-Analytics and Insights:
 
-Integrate analytics tools to gather data on user behavior, such as page views, user engagement, popular posts,
-or demographic information. Utilize this data to gain insights and make informed decisions for further improving your weblog.
-Mobile Responsiveness:
 
-Ensure your weblog is mobile-responsive, providing a seamless and optimized experience for users accessing the platform from various devices,
-including smartphones and tablets.

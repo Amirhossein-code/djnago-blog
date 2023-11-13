@@ -71,3 +71,5 @@ registration by adding more information, and access other authors' profiles and 
     PUT /authors/me/         : Complete registration by adding additional information to the user's profile.
     GET /authors/<id>/       : Retrieve the profile of a specific author by ID.
     GET /authors/<id>/posts/ : Retrieve all posts from the specific author.
+    GET /authors/<id>/reviews
+    GET /authors/<id>/reviews/<id>
