@@ -115,11 +115,12 @@ class CategoryWithPostsSerializer(TaggitSerializer, serializers.ModelSerializer)
 
 
 # Author serialziers
-class AuthorWithPostSerializer(serializers.ModelSerializer):
+class AuthorWithPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     posts = serializers.SerializerMethodField()
+    tags = TagListSerializerField()
 
     class Meta:
         model = Author
@@ -135,6 +136,7 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
             "profile_image",
             "social_media_url",
             "website_url",
+            "tags",
             "posts",
         ]
 
@@ -144,12 +146,13 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
         return serializer.data
 
 
-class AuthorSerializer(serializers.ModelSerializer):
+class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     # is_liked_by_user = serializers.SerializerMethodField()
+    tags = TagListSerializerField()
 
     class Meta:
         model = Author
@@ -166,6 +169,7 @@ class AuthorSerializer(serializers.ModelSerializer):
             "profile_image",
             "social_media_url",
             "website_url",
+            "tags",
             # "is_liked_by_user",
         ]
 
@@ -174,9 +178,10 @@ class AuthorSerializer(serializers.ModelSerializer):
     #     return obj.is_liked_by_user(user)
 
 
-class SimpleAuthorSerializer(serializers.ModelSerializer):
+class SimpleAuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Author
@@ -185,26 +190,27 @@ class SimpleAuthorSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "bio",
+            "tags",
             "profile_image",
         ]
 
 
-class SimpleAuthorWithLikeSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(source="user.first_name", read_only=True)
-    last_name = serializers.CharField(source="user.last_name", read_only=True)
-    # is_liked_by_user = serializers.SerializerMethodField()
+# class SimpleAuthorWithLikeSerializer(serializers.ModelSerializer):
+#     first_name = serializers.CharField(source="user.first_name", read_only=True)
+#     last_name = serializers.CharField(source="user.last_name", read_only=True)
+#     # is_liked_by_user = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Author
-        fields = [
-            "id",
-            "first_name",
-            "last_name",
-            "bio",
-            "profile_image",
-            # "is_liked_by_user",
-        ]
+#     class Meta:
+#         model = Author
+#         fields = [
+#             "id",
+#             "first_name",
+#             "last_name",
+#             "bio",
+#             "profile_image",
+#             # "is_liked_by_user",
+#         ]
 
-    # def get_is_liked_by_user(self, obj):
-    #     user = self.context["request"].user
-    #     return obj.is_liked_by_user(user)
+#     # def get_is_liked_by_user(self, obj):
+#     #     user = self.context["request"].user
+#     #     return obj.is_liked_by_user(user)

@@ -25,6 +25,8 @@ class Author(models.Model):
         blank=True,
     )
     joined_at = models.DateTimeField(auto_now_add=True)
+    tags = TaggableManager()
+
     # likes = models.ManyToManyField("Like", blank=True, related_name="authors_likes")
 
     # @property
