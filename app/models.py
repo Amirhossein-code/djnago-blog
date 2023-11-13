@@ -79,6 +79,7 @@ class Post(models.Model):
     posted_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT, related_name="posts")
+    tags = TaggableManager()
 
     def __str__(self):
         return self.title

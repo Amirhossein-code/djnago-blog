@@ -4,8 +4,9 @@ from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 
 # Post Serializers
-class CreatePostSerializer(serializers.ModelSerializer):
+class CreatePostSerializer(TaggitSerializer, serializers.ModelSerializer):
     author_id = serializers.IntegerField(source="user.author.id", read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Post
@@ -18,11 +19,13 @@ class CreatePostSerializer(serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
+            "tags",
         ]
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     author = serializers.CharField(source="author.id", read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
         model = Post
@@ -35,10 +38,13 @@ class PostSerializer(serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
+            "tags",
         ]
 
 
-class MyPostsSerializer(serializers.ModelSerializer):
+class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
     class Meta:
         model = Post
         fields = [
@@ -49,6 +55,7 @@ class MyPostsSerializer(serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
+            "tags",
         ]
 
 
