@@ -114,16 +114,16 @@ class AuthorSocialMediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AuthorSocialMedia
-        fields = ["social_media_urls"]
+        fields = ["social_media_urls", "website_url"]
 
 
 # sample implementation
-# class AuthorSerializer(serializers.ModelSerializer):
-#     social_media = AuthorSocialMediaSerializer()
+class AuthorSerializer(serializers.ModelSerializer):
+    social_media = AuthorSocialMediaSerializer()
 
-#     class Meta:
-#         model = Author
-#         fields = ["id", "username", "email", "social_media"]
+    class Meta:
+        model = Author
+        fields = ["id", "username", "email", "social_media"]
 
 
 # Author serialziers
@@ -132,6 +132,13 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     posts = serializers.SerializerMethodField()
+    # social_media = AuthorSocialMediaSerializer(many=True, read_only=True)
+    website_url = serializers.CharField(
+        source="authorsocialmedia.website_url", read_only=True
+    )
+    social_media = AuthorSocialMediaSerializer(
+        source="authorsocialmedia", read_only=True
+    )
 
     class Meta:
         model = Author
@@ -142,9 +149,11 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
             "last_name",
             "slug",
             "phone",
-            "birth_date",
             "bio",
+            "birth_date",
             "profile_image",
+            "website_url",
+            "social_media",
             "posts",
         ]
 
@@ -174,12 +183,12 @@ class AuthorSerializer(serializers.ModelSerializer):
             "birth_date",
             "bio",
             "profile_image",
-            "is_liked_by_user",
+            # "is_liked_by_user",
         ]
 
-    def get_is_liked_by_user(self, obj):
-        user = self.context["request"].user
-        return obj.is_liked_by_user(user)
+    # def get_is_liked_by_user(self, obj):
+    #     user = self.context["request"].user
+    #     return obj.is_liked_by_user(user)
 
 
 class SimpleAuthorSerializer(serializers.ModelSerializer):
@@ -210,9 +219,9 @@ class SimpleAuthorWithLikeSerializer(serializers.ModelSerializer):
             "last_name",
             "bio",
             "profile_image",
-            "is_liked_by_user",
+            # "is_liked_by_user",
         ]
 
-    def get_is_liked_by_user(self, obj):
-        user = self.context["request"].user
-        return obj.is_liked_by_user(user)
+    # def get_is_liked_by_user(self, obj):
+    #     user = self.context["request"].user
+    #     return obj.is_liked_by_user(user)

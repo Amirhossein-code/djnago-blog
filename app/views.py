@@ -16,7 +16,7 @@ from rest_framework.permissions import (
 )
 
 from .filters import AuthorFilter, CategoryFilter, PostFilter
-from .models import Post, Category, Author, Like
+from .models import Post, Category, Author
 from .serializers import (
     AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
@@ -109,25 +109,25 @@ class AuthorViewSet(ModelViewSet):
         serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=["post"])
-    def toggle_like(self, request, pk=None):
-        author = self.get_object()
-        user = request.user
+    # @action(detail=True, methods=["post"])
+    # def toggle_like(self, request, pk=None):
+    #     author = self.get_object()
+    #     user = request.user
 
-        try:
-            like = author.likes.get(user=user)
-            liked = True
+    #     try:
+    #         like = author.likes.get(user=user)
+    #         liked = True
 
-            # Unlike the author
-            like.delete()
-            liked = False
+    #         # Unlike the author
+    #         like.delete()
+    #         liked = False
 
-        except Like.DoesNotExist:
-            # Like the author
-            like = Like.objects.create(user=user, author=author)
-            liked = True
+    #     except Like.DoesNotExist:
+    #         # Like the author
+    #         like = Like.objects.create(user=user, author=author)
+    #         liked = True
 
-        return Response({"liked": liked})
+    #     return Response({"liked": liked})
 
 
 class PostViewSet(ModelViewSet):
@@ -205,7 +205,7 @@ class CategoryViewSet(ModelViewSet):
     pagination_class = CategoriesPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = CategoryFilter
-    lookup_field = "slug"
+    # lookup_field = "slug"
 
     def get_permissions(self):
         if self.request.method == "POST":
@@ -229,32 +229,30 @@ class CategoryViewSet(ModelViewSet):
         serializer = IntroPostSerializer(posts, many=True)
         return Response(serializer.data)
 
-    def get_object(self):
-        queryset = self.get_queryset()
-        queryset = self.filter_queryset(queryset)
+    # uncomment If you want to retreive by slug in the back end url
+    # def get_object(self):
+    #     queryset = self.get_queryset()
+    #     queryset = self.filter_queryset(queryset)
 
-        # Check if the lookup field is a slug or an ID
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-        lookup_value = self.kwargs[lookup_url_kwarg]
+    #     # Check if the lookup field is a slug or an ID
+    #     lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+    #     lookup_value = self.kwargs[lookup_url_kwarg]
 
-        # Try retrieving by slug
-        try:
-            obj = queryset.get(slug=lookup_value)
-            self.check_object_permissions(self.request, obj)
-            return obj
-        except Category.DoesNotExist:
-            pass
-        except ValidationError as e:
-            if "slug" in e.detail:
-                raise NotFound("Invalid slug format.")
+    #     # Try retrieving by slug
+    #     try:
+    #         obj = queryset.get(slug=lookup_value)
+    #         self.check_object_permissions(self.request, obj)
+    #         return obj
+    #     except ValidationError as e:
+    #         if "slug" in e.detail:
+    #             raise NotFound("Invalid slug format.")
+    #     except Category.DoesNotExist:
+    #         try:
+    #             obj = queryset.get(pk=lookup_value)
+    #             self.check_object_permissions(self.request, obj)
+    #             return obj
+    #         except (Category.DoesNotExist, ValueError):
+    #             raise NotFound("Category not found.")
 
-        # Try retrieving by ID if not found by slug
-        try:
-            obj = queryset.get(pk=lookup_value)
-            self.check_object_permissions(self.request, obj)
-            return obj
-        except (Category.DoesNotExist, ValueError):
-            raise NotFound("Category not found.")
-
-    def not_found_exception(self):
-        raise NotFound("Category not found.")
+    # def not_found_exception(self):
+    #     raise NotFound("Category not found.")

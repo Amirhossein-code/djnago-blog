@@ -23,11 +23,11 @@ class Author(models.Model):
         null=True,
         blank=True,
     )
-    likes = models.ManyToManyField("Like", blank=True, related_name="authors_likes")
+    # likes = models.ManyToManyField("Like", blank=True, related_name="authors_likes")
 
-    @property
-    def is_liked_by_user(self, user):
-        return self.likes.filter(user=user).exists()
+    # @property
+    # def is_liked_by_user(self, user):
+    #     return self.likes.filter(user=user).exists()
 
     def get_author_slug(self):
         # we can not use str method inside populate from
@@ -84,6 +84,6 @@ class Post(models.Model):
         return self.title
 
 
-class Like(models.Model):
-    author = models.OneToOneField("Author", on_delete=models.CASCADE)
-    liked_date = models.DateTimeField(auto_now_add=True)
+# class Like(models.Model):
+#     author = models.OneToOneField("Author", on_delete=models.CASCADE)
+#     liked_date = models.DateTimeField(auto_now_add=True)
