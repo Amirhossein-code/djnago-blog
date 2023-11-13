@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import AuthorSocialMedia, Post, Category, Author, SocialMediaURL
+from .models import Post, Category, Author
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 
@@ -112,27 +112,6 @@ class CategoryWithPostsSerializer(TaggitSerializer, serializers.ModelSerializer)
 
 
 # Social medi serializers
-class SocialMediaURLSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SocialMediaURL
-        fields = ["url"]
-
-
-class AuthorSocialMediaSerializer(serializers.ModelSerializer):
-    social_media_urls = SocialMediaURLSerializer(many=True)
-
-    class Meta:
-        model = AuthorSocialMedia
-        fields = ["social_media_urls", "website_url"]
-
-
-# sample implementation
-# class AuthorSerializer(serializers.ModelSerializer):
-#     social_media = AuthorSocialMediaSerializer()
-
-#     class Meta:
-#         model = Author
-#         fields = ["id", "username", "email", "social_media"]
 
 
 # Author serialziers
@@ -141,13 +120,6 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     posts = serializers.SerializerMethodField()
-    # social_media = AuthorSocialMediaSerializer(many=True, read_only=True)
-    website_url = serializers.CharField(
-        source="authorsocialmedia.website_url", read_only=True
-    )
-    social_media = AuthorSocialMediaSerializer(
-        source="authorsocialmedia", read_only=True
-    )
 
     class Meta:
         model = Author
@@ -161,8 +133,8 @@ class AuthorWithPostSerializer(serializers.ModelSerializer):
             "bio",
             "birth_date",
             "profile_image",
+            "social_media_url",
             "website_url",
-            "social_media",
             "posts",
         ]
 
@@ -192,6 +164,8 @@ class AuthorSerializer(serializers.ModelSerializer):
             "birth_date",
             "bio",
             "profile_image",
+            "social_media_url",
+            "website_url",
             # "is_liked_by_user",
         ]
 

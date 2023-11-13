@@ -7,22 +7,24 @@ from taggit.managers import TaggableManager
 
 
 class Author(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone = models.CharField(max_length=255, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    joined_at = models.DateTimeField(auto_now_add=True)
     bio = models.CharField(max_length=550, null=True, blank=True)
     profile_image = models.ImageField(
         upload_to="profile_images/",
         blank=True,
         null=True,
     )
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    website_url = models.CharField(max_length=355, null=True, blank=True)
+    social_media_url = models.CharField(max_length=355, null=True, blank=True)
     slug = AutoSlugField(
         populate_from="get_author_slug",
         unique=True,
         null=True,
         blank=True,
     )
+    joined_at = models.DateTimeField(auto_now_add=True)
     # likes = models.ManyToManyField("Like", blank=True, related_name="authors_likes")
 
     # @property
@@ -46,18 +48,6 @@ class Author(models.Model):
 
     class Meta:
         ordering = ["user__first_name", "user__last_name"]
-
-
-class AuthorSocialMedia(models.Model):
-    author = models.OneToOneField(Author, on_delete=models.CASCADE)
-    website_url = models.URLField()
-
-
-class SocialMediaURL(models.Model):
-    author_social_media = models.ForeignKey(
-        AuthorSocialMedia, on_delete=models.CASCADE, related_name="social_media_urls"
-    )
-    url = models.URLField()
 
 
 class Category(models.Model):
