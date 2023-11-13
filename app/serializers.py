@@ -84,8 +84,9 @@ class CategorySerializer(TaggitSerializer, serializers.ModelSerializer):
         ]
 
 
-class CategoryWithPostsSerializer(serializers.ModelSerializer):
+class CategoryWithPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
     posts = serializers.SerializerMethodField()
+    tags = TagListSerializerField()
 
     class Meta:
         model = Category
@@ -93,6 +94,7 @@ class CategoryWithPostsSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "slug",
+            "tags",
             "posts",
         ]
 
@@ -118,12 +120,12 @@ class AuthorSocialMediaSerializer(serializers.ModelSerializer):
 
 
 # sample implementation
-class AuthorSerializer(serializers.ModelSerializer):
-    social_media = AuthorSocialMediaSerializer()
+# class AuthorSerializer(serializers.ModelSerializer):
+#     social_media = AuthorSocialMediaSerializer()
 
-    class Meta:
-        model = Author
-        fields = ["id", "username", "email", "social_media"]
+#     class Meta:
+#         model = Author
+#         fields = ["id", "username", "email", "social_media"]
 
 
 # Author serialziers
@@ -168,7 +170,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
-    is_liked_by_user = serializers.SerializerMethodField()
+    # is_liked_by_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Author
@@ -209,7 +211,7 @@ class SimpleAuthorSerializer(serializers.ModelSerializer):
 class SimpleAuthorWithLikeSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
-    is_liked_by_user = serializers.SerializerMethodField()
+    # is_liked_by_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Author
