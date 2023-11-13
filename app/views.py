@@ -160,6 +160,9 @@ class PostViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = PostFilter
 
+    def get_permissions(self):
+        return super().get_permissions()
+
     def get_serializer_class(self):
         if self.action == "create":
             return CreatePostSerializer

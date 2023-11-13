@@ -29,10 +29,6 @@ class Author(models.Model):
 
     # likes = models.ManyToManyField("Like", blank=True, related_name="authors_likes")
 
-    # @property
-    # def is_liked_by_user(self, user):
-    #     return self.likes.filter(user=user).exists()
-
     def get_author_slug(self):
         # we can not use str method inside populate from
         return f"{self.user.first_name} {self.user.last_name}"
@@ -73,10 +69,14 @@ class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.PROTECT, related_name="posts")
     tags = TaggableManager()
 
+    @property
+    def is_liked_by_user(self, user):
+        return self.likes.filter(user=self.request.user).exists()
+
     def __str__(self):
         return self.title
 
 
-# class Like(models.Model):
-#     author = models.OneToOneField("Author", on_delete=models.CASCADE)
-#     liked_date = models.DateTimeField(auto_now_add=True)
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
