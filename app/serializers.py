@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import AuthorSocialMedia, Post, Category, Author, SocialMediaURL
+from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 
 # Post Serializers
@@ -70,13 +71,16 @@ class IntroPostSerializer(serializers.ModelSerializer):
 
 
 # Category serialziers
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
     class Meta:
         model = Category
         fields = [
             "id",
             "title",
             "slug",
+            "tags",
         ]
 
 

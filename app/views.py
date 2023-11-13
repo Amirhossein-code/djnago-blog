@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework import viewsets, status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -204,6 +205,7 @@ class CategoryViewSet(ModelViewSet):
     pagination_class = CategoriesPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = CategoryFilter
+    lookup_field = "slug"
 
     def get_permissions(self):
         if self.request.method == "POST":
@@ -222,9 +224,37 @@ class CategoryViewSet(ModelViewSet):
         pagination_class=FilteredPostsPagination,
     )
     def posts(self, request, pk=None):
-        # intro post serializer implemented to only see quick intros
-        # can be changed to Simple post serialzer if current data is insuffcient
         category = self.get_object()
         posts = category.posts.all()
         serializer = IntroPostSerializer(posts, many=True)
         return Response(serializer.data)
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        queryset = self.filter_queryset(queryset)
+
+        # Check if the lookup field is a slug or an ID
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        lookup_value = self.kwargs[lookup_url_kwarg]
+
+        # Try retrieving by slug
+        try:
+            obj = queryset.get(slug=lookup_value)
+            self.check_object_permissions(self.request, obj)
+            return obj
+        except Category.DoesNotExist:
+            pass
+        except ValidationError as e:
+            if "slug" in e.detail:
+                raise NotFound("Invalid slug format.")
+
+        # Try retrieving by ID if not found by slug
+        try:
+            obj = queryset.get(pk=lookup_value)
+            self.check_object_permissions(self.request, obj)
+            return obj
+        except (Category.DoesNotExist, ValueError):
+            raise NotFound("Category not found.")
+
+    def not_found_exception(self):
+        raise NotFound("Category not found.")
