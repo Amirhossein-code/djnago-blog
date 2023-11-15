@@ -6,6 +6,31 @@ from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
 
+DEBUG = True
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "blog",
+        "USER": "root",
+        "PASSWORD": "MySQL124@SE",
+        "HOST": "localhost",
+        "PORT": "3306",
+    }
+}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": os.getenv("MYSQL_DATABASE"),
+#         "USER": os.getenv("MYSQL_USER"),
+#         "PASSWORD": os.getenv("MYSQL_PASSWORD"),
+#         "HOST": os.getenv("DB_HOST"),
+#         "PORT": "3306",
+#     }
+# }
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
