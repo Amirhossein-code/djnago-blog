@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
-from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
 
@@ -13,11 +12,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "blog",
-        "USER": "root",
-        "PASSWORD": "MySQL124@SE",
-        "HOST": "localhost",
-        "PORT": "3306",
+        "NAME": os.getenv("MYSQL_DATABASE"),
+        "USER": os.getenv("MYSQL_USER"),
+        "PASSWORD": os.getenv("MSQL_PASS"),
+        "HOST": os.getenv("DB_HOST"),
     }
 }
 # DATABASES = {
