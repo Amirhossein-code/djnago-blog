@@ -155,7 +155,7 @@ class PostViewSet(ModelViewSet):
 
     queryset = Post.objects.prefetch_related("category", "author").all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PostsPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = PostFilter

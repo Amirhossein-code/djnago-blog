@@ -2,8 +2,9 @@ Current status :
     Likes app implemented partially
     likely to be bugged 
     the implementation needs to be improved 
-################################################################################
+##############################################
 - SMTP server for authenticating emails
+  + SMTP for dev maybe a good option 
 - Improve admin panel Implementations
 - Testing
   - pytest tests for all behaviuors

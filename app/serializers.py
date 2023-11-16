@@ -24,9 +24,7 @@ class CreatePostSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
-    author = serializers.CharField(source="author.id", read_only=True)
     tags = TagListSerializerField()
-    # is_liked_by_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -40,13 +38,33 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             "posted_at",
             "last_updated",
             "tags",
-            # "is_liked_by_user",
         ]
 
-    # def get_is_liked_by_user(self, obj):
-    #     user = self.context["request"].user
-    #     print(user) 
-    #     return obj.is_liked_by_user(user=user)
+
+# class PostWithLikesSerializer(TaggitSerializer, serializers.ModelSerializer):
+#     author = serializers.CharField(source="author.id", read_only=True)
+#     tags = TagListSerializerField()
+#     # is_liked_by_user = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = Post
+#         fields = [
+#             "id",
+#             "author",
+#             "title",
+#             "content",
+#             "slug",
+#             "category",
+#             "posted_at",
+#             "last_updated",
+#             "tags",
+#             # "is_liked_by_user",
+#         ]
+
+#     # def get_is_liked_by_user(self, obj):
+#     #     user = self.context["request"].user
+#     #     print(user)
+#     #     return obj.is_liked_by_user(user=user)
 
 
 class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
