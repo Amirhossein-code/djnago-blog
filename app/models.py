@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
 from django.db import models
-from django.utils.text import slugify
 from autoslug import AutoSlugField
 from taggit.managers import TaggableManager
 
@@ -26,8 +25,6 @@ class Author(models.Model):
     )
     joined_at = models.DateTimeField(auto_now_add=True)
     tags = TaggableManager()
-
-    # likes = models.ManyToManyField("Like", blank=True, related_name="authors_likes")
 
     def get_author_slug(self):
         # we can not use str method inside populate from
@@ -68,19 +65,9 @@ class Post(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT, related_name="posts")
     tags = TaggableManager()
-    # likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="liked_post")
     liked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    @property
-    def is_liked_by_user(self, user):
-        return self.likes.filter(user=self.request.user).exists()
-
     def __str__(self):
         return self.title
-
-
-class Like(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)

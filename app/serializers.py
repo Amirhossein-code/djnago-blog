@@ -50,39 +50,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         return instance
 
 
-# class PostWithLikesSerializer(TaggitSerializer, serializers.ModelSerializer):
-#     author = serializers.CharField(source="author.id", read_only=True)
-#     tags = TagListSerializerField()
-#     liked_by = serializers.PrimaryKeyRelatedField(read_only=True)
-
-#     class Meta:
-#         model = Post
-#         fields = [
-#             "id",
-#             "author",
-#             "title",
-#             "content",
-#             "slug",
-#             "category",
-#             "posted_at",
-#             "last_updated",
-#             "tags",
-#             "liked_by",
-#         ]
-
-#     def update(self, instance, validated_data):
-#         liked_by = validated_data.get("liked_by", None)
-#         if liked_by and instance.liked_by != liked_by:
-#             instance.liked_by = liked_by
-#             instance.save()
-#         return instance
-
-# def get_is_liked_by_user(self, obj):
-#     user = self.context["request"].user
-#     print(user)
-#     return obj.is_liked_by_user(user=user)
-
-
 class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
 
@@ -152,9 +119,6 @@ class CategoryWithPostsSerializer(TaggitSerializer, serializers.ModelSerializer)
         return serializer.data
 
 
-# Social medi serializers
-
-
 # Author serialziers
 class AuthorWithPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
@@ -192,7 +156,6 @@ class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
-    # is_liked_by_user = serializers.SerializerMethodField()
     tags = TagListSerializerField()
 
     class Meta:
@@ -211,12 +174,7 @@ class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
             "social_media_url",
             "website_url",
             "tags",
-            # "is_liked_by_user",
         ]
-
-    # def get_is_liked_by_user(self, obj):
-    #     user = self.context["request"].user
-    #     return obj.is_liked_by_user(user)
 
 
 class SimpleAuthorSerializer(TaggitSerializer, serializers.ModelSerializer):

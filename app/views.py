@@ -190,21 +190,6 @@ class PostViewSet(ModelViewSet):
         serializer = MyPostsSerializer(posts, many=True)
         return Response(serializer.data)
 
-    # @action(detail=True, methods=["patch"])
-    # def like(self, request, pk=None):
-    #     post = self.get_object()
-    #     post.likes.add(request.user)
-    #     post.save()
-    #     serializer = self.get_serializer(post)
-    #     return Response(serializer.data)
-
-    # @action(detail=True, methods=["patch"])
-    # def unlike(self, request, pk=None):
-    #     post = self.get_object()
-    #     post.likes.remove(request.user)
-    #     post.save()
-    #     serializer = self.get_serializer(post)
-    #     return Response(serializer.data)
     @action(detail=True, methods=["post"])
     def like(self, request, pk=None):
         post = self.get_object()
@@ -259,55 +244,3 @@ class CategoryViewSet(ModelViewSet):
         posts = category.posts.all()
         serializer = IntroPostSerializer(posts, many=True)
         return Response(serializer.data)
-
-    # uncomment If you want to retreive by slug in the back end url
-    # def get_object(self):
-    #     queryset = self.get_queryset()
-    #     queryset = self.filter_queryset(queryset)
-
-    #     # Check if the lookup field is a slug or an ID
-    #     lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-    #     lookup_value = self.kwargs[lookup_url_kwarg]
-
-    #     # Try retrieving by slug
-    #     try:
-    #         obj = queryset.get(slug=lookup_value)
-    #         self.check_object_permissions(self.request, obj)
-    #         return obj
-    #     except ValidationError as e:
-    #         if "slug" in e.detail:
-    #             raise NotFound("Invalid slug format.")
-    #     except Category.DoesNotExist:
-    #         try:
-    #             obj = queryset.get(pk=lookup_value)
-    #             self.check_object_permissions(self.request, obj)
-    #             return obj
-    #         except (Category.DoesNotExist, ValueError):
-    #             raise NotFound("Category not found.")
-
-    # def not_found_exception(self):
-    #     raise NotFound("Category not found.")
-
-
-# class LikePostView(generics.UpdateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-
-#     def patch(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         instance.likes.add(request.user)
-#         instance.save()
-#         serializer = self.get_serializer(instance)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-# class UnlikePostView(generics.UpdateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-
-#     def patch(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         instance.likes.remove(request.user)
-#         instance.save()
-#         serializer = self.get_serializer(instance)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
