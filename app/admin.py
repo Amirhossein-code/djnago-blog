@@ -13,7 +13,6 @@ class AuthorAdmin(admin.ModelAdmin):
         "slug",
         "tags",  # bugged
     ]
-    # prepopulated_fields = {"slug": ["user__first_name", "user__last_name"]}
 
     search_fields = ["user__first_name", "user__last_name", "phone"]
     list_filter = ["joined_at"]
@@ -43,18 +42,6 @@ class AuthorAdmin(admin.ModelAdmin):
             },
         ),
     ]
-
-
-# @admin.register(Author)
-# class AuthorAdmin(admin.ModelAdmin):
-#     list_display = [
-#         "first_name",
-#         "last_name",
-#         "phone",
-#         "joined_at",
-#         "user",
-#     ]
-#     list_select_related = ["user"]
 
 
 @admin.register(Post)
