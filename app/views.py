@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
@@ -190,6 +190,37 @@ class PostViewSet(ModelViewSet):
         serializer = MyPostsSerializer(posts, many=True)
         return Response(serializer.data)
 
+    # @action(detail=True, methods=["patch"])
+    # def like(self, request, pk=None):
+    #     post = self.get_object()
+    #     post.likes.add(request.user)
+    #     post.save()
+    #     serializer = self.get_serializer(post)
+    #     return Response(serializer.data)
+
+    # @action(detail=True, methods=["patch"])
+    # def unlike(self, request, pk=None):
+    #     post = self.get_object()
+    #     post.likes.remove(request.user)
+    #     post.save()
+    #     serializer = self.get_serializer(post)
+    #     return Response(serializer.data)
+    @action(detail=True, methods=["post"])
+    def like(self, request, pk=None):
+        post = self.get_object()
+        if post.liked_by is None:
+            post.liked_by = request.user
+            post.save()
+        return Response(status=200)
+
+    @action(detail=True, methods=["post"])
+    def unlike(self, request, pk=None):
+        post = self.get_object()
+        if post.liked_by == request.user:
+            post.liked_by = None
+            post.save()
+        return Response(status=200)
+
 
 class CategoryViewSet(ModelViewSet):
     """
@@ -256,3 +287,27 @@ class CategoryViewSet(ModelViewSet):
 
     # def not_found_exception(self):
     #     raise NotFound("Category not found.")
+
+
+# class LikePostView(generics.UpdateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+
+#     def patch(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         instance.likes.add(request.user)
+#         instance.save()
+#         serializer = self.get_serializer(instance)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# class UnlikePostView(generics.UpdateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+
+#     def patch(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         instance.likes.remove(request.user)
+#         instance.save()
+#         serializer = self.get_serializer(instance)
+#         return Response(serializer.data, status=status.HTTP_200_OK)

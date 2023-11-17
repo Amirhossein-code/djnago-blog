@@ -68,6 +68,10 @@ class Post(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT, related_name="posts")
     tags = TaggableManager()
+    # likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="liked_post")
+    liked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     @property
     def is_liked_by_user(self, user):

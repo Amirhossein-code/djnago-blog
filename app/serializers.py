@@ -25,6 +25,7 @@ class CreatePostSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    liked_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Post
@@ -37,14 +38,22 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
+            "liked_by",
             "tags",
         ]
+
+    def update(self, instance, validated_data):
+        liked_by = validated_data.get("liked_by", None)
+        if liked_by and instance.liked_by != liked_by:
+            instance.liked_by = liked_by
+            instance.save()
+        return instance
 
 
 # class PostWithLikesSerializer(TaggitSerializer, serializers.ModelSerializer):
 #     author = serializers.CharField(source="author.id", read_only=True)
 #     tags = TagListSerializerField()
-#     # is_liked_by_user = serializers.SerializerMethodField()
+#     liked_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
 #     class Meta:
 #         model = Post
@@ -58,13 +67,20 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
 #             "posted_at",
 #             "last_updated",
 #             "tags",
-#             # "is_liked_by_user",
+#             "liked_by",
 #         ]
 
-#     # def get_is_liked_by_user(self, obj):
-#     #     user = self.context["request"].user
-#     #     print(user)
-#     #     return obj.is_liked_by_user(user=user)
+#     def update(self, instance, validated_data):
+#         liked_by = validated_data.get("liked_by", None)
+#         if liked_by and instance.liked_by != liked_by:
+#             instance.liked_by = liked_by
+#             instance.save()
+#         return instance
+
+# def get_is_liked_by_user(self, obj):
+#     user = self.context["request"].user
+#     print(user)
+#     return obj.is_liked_by_user(user=user)
 
 
 class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
