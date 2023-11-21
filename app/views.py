@@ -1,40 +1,24 @@
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import (
     IsAuthenticated,
-    AllowAny,
-    IsAdminUser,
-    IsAuthenticatedOrReadOnly,
 )
 
-from .filters import AuthorFilter, CategoryFilter, PostFilter
-from .models import Post, Category, Author
+from .filters import AuthorFilter
+from .models import Author
 from .serializers import (
     AuthorWithPostSerializer,
-    CategoryWithPostsSerializer,
-    IntroPostSerializer,
-    CreatePostSerializer,
-    CategorySerializer,
     AuthorSerializer,
-    MyPostsSerializer,
-    PostSerializer,
-    SearchSerializer,
     SimpleAuthorSerializer,
     SimplePostSerializer,
 )
 from .pagination import (
     FilteredPostsPagination,
-    PostsPagination,
     AuthorsPagination,
-    CategoriesPagination,
 )
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 
@@ -109,26 +93,3 @@ class AuthorViewSet(ModelViewSet):
         posts = author.posts.all()
         serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)
-
-    # @action(detail=True, methods=["post"])
-    # def toggle_like(self, request, pk=None):
-    #     author = self.get_object()
-    #     user = request.user
-
-    #     try:
-    #         like = author.likes.get(user=user)
-    #         liked = True
-
-    #         # Unlike the author
-    #         like.delete()
-    #         liked = False
-
-    #     except Like.DoesNotExist:
-    #         # Like the author
-    #         like = Like.objects.create(user=user, author=author)
-    #         liked = True
-
-    #     return Response({"liked": liked})
-
-
-
