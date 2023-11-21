@@ -53,6 +53,7 @@ LOCAL_APPS = [
     "app",
     "posts",
     "categories",
+    "search",
     "review",
     "core",
 ]

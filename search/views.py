@@ -7,43 +7,36 @@ from .serializers import (
 )
 from rest_framework.permissions import IsAuthenticated
 from posts.models import Post
+from app.models import Author
+from categories.models import Category
 
 
 class SearchViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     pagination_class = SearchResultPagination
+    serializer_class = SearchSerializer
 
     def list(self, request):
         serializer = SearchSerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
         query = serializer.validated_data["query"]
-        fields = serializer.validated_data.get("fields")
 
-        # Define the searchable fields and their corresponding lookups
-        searchable_fields = {
-            "tag": "tags__name__icontains",
-            "author": "author__name__icontains",
-            "category": "category__title__icontains",
-            "title": "title__icontains",
+        # Perform the search across multiple models
+        post_results = Post.objects.filter(title__icontains=query)
+        author_result = Author.objects.filter(title__icontains=query)
+        # You can perform additional filtering, sorting, or pagination here if needed
+
+        # Serialize the results from different models
+        serialized_post_results = [
+            {"title": post.title, "content": post.content} for post in post_results
+        ]
+        serialized_comment_results = [
+            {"content": comment.content} for comment in comment_results
+        ]
+
+        # Return the combined results
+        results = {
+            "posts": serialized_post_results,
+            "comments": serialized_comment_results,
         }
-
-        # Construct the field lookups based on the provided fields
-        field_lookups = []
-        if fields:
-            for field in fields:
-                if field in searchable_fields:
-                    field_lookups.append(searchable_fields[field])
-
-        # Query the database using the field lookups and search query
-        if field_lookups:
-            queryset = Post.objects.filter(*field_lookups, title__icontains=query)
-        else:
-            queryset = Post.objects.filter(title__icontains=query)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response({"results": results})

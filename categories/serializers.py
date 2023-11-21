@@ -36,7 +36,3 @@ class CategoryWithPostsSerializer(TaggitSerializer, serializers.ModelSerializer)
         posts = category.posts.all()[:2]
         serializer = IntroPostSerializer(posts, many=True, read_only=True)
         return serializer.data
-
-
-class SearchSerializer(serializers.Serializer):
-    query = serializers.CharField()

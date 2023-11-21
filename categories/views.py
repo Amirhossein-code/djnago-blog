@@ -12,7 +12,6 @@ from .serializers import (
     CategoryWithPostsSerializer,
     IntroPostSerializer,
     CategorySerializer,
-    SearchSerializer,
 )
 from .pagination import (
     FilteredPostsPagination,
@@ -60,5 +59,3 @@ class CategoryViewSet(ModelViewSet):
         posts = category.posts.all()
         serializer = IntroPostSerializer(posts, many=True)
         return Response(serializer.data)
-
-

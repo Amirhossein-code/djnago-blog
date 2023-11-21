@@ -3,12 +3,14 @@ from review.views import AuthorReviewViewSet, PostReviewViewSet
 from .views import AuthorViewSet, HomepageViewSet
 from posts.views import PostViewSet
 from categories.views import CategoryViewSet
+from search.views import SearchViewSet
 
 router = routers.DefaultRouter()
 router.register("", HomepageViewSet, basename="")
 router.register("posts", PostViewSet, basename="posts")
 router.register("categories", CategoryViewSet, basename="categories")
 router.register("authors", AuthorViewSet, basename="authors")
+router.register("search", SearchViewSet, basename="search")
 
 posts_router = routers.NestedDefaultRouter(router, "posts", lookup="post")
 posts_router.register("reviews", PostReviewViewSet, basename="post-reviews")
