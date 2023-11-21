@@ -208,3 +208,7 @@ class SimpleAuthorWithLikeSerializer(serializers.ModelSerializer):
             "profile_image",
             "is_liked_by_user",
         ]
+
+
+class SearchSerializer(serializers.Serializer):
+    query = serializers.CharField()

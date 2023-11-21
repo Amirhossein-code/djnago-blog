@@ -26,6 +26,7 @@ from .serializers import (
     AuthorSerializer,
     MyPostsSerializer,
     PostSerializer,
+    SearchSerializer,
     SimpleAuthorSerializer,
     SimplePostSerializer,
 )
@@ -244,3 +245,13 @@ class CategoryViewSet(ModelViewSet):
         posts = category.posts.all()
         serializer = IntroPostSerializer(posts, many=True)
         return Response(serializer.data)
+
+
+class SearchViewSet(ModelViewSet):
+    def get(self, request):
+        serializer = SearchSerializer(data=request.GET)
+        serializer.is_valid(raise_exception=True)
+        query = serializer.validated_data["query"]
+        results = Post.objects.filter(title__icontains=query)
+        # You can perform additional filtering, sorting, or pagination here if needed
+        return Response({"results": results})
