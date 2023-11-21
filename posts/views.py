@@ -2,27 +2,21 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from rest_framework.permissions import (
-    IsAuthenticated,
-)
 
-from .filters import CategoryFilter, PostFilter
-from .models import Post, Category
+
+from .filters import PostFilter
+from .models import Post
 from .serializers import (
-    CategoryWithPostsSerializer,
-    IntroPostSerializer,
     CreatePostSerializer,
-    CategorySerializer,
     MyPostsSerializer,
     PostSerializer,
-    SearchSerializer,
 )
 from .pagination import (
-    FilteredPostsPagination,
     PostsPagination,
-    CategoriesPagination,
 )
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .permissions import IsAuthorOrReadOnly
+from rest_framework import status
+from django.contrib.auth.models import AnonymousUser
 
 
 # Create your views here.
@@ -81,23 +75,30 @@ class PostViewSet(ModelViewSet):
         permission_classes=[IsAuthorOrReadOnly],
     )
     def my_posts(self, request):
-        author = request.user.author
-        posts = author.posts.all()
-        serializer = MyPostsSerializer(posts, many=True)
-        return Response(serializer.data)
+        if request.method == "GET":
+            if isinstance(request.user, AnonymousUser):
+                return Response(
+                    {"detail": "Please Login to view your profile"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            author = request.user.author
+            posts = author.posts.all()
+            serializer = MyPostsSerializer(posts, many=True)
+            return Response(serializer.data)
 
-    @action(detail=True, methods=["post"])
-    def like(self, request, pk=None):
-        post = self.get_object()
-        if post.liked_by is None:
-            post.liked_by = request.user
-            post.save()
-        return Response(status=200)
+    # the like feature needs improvment and not ready
+    # @action(detail=True, methods=["post"])
+    # def like(self, request, pk=None):
+    #     post = self.get_object()
+    #     if post.liked_by is None:
+    #         post.liked_by = request.user
+    #         post.save()
+    #     return Response(status=200)
 
-    @action(detail=True, methods=["post"])
-    def unlike(self, request, pk=None):
-        post = self.get_object()
-        if post.liked_by == request.user:
-            post.liked_by = None
-            post.save()
-        return Response(status=200)
+    # @action(detail=True, methods=["post"])
+    # def unlike(self, request, pk=None):
+    #     post = self.get_object()
+    #     if post.liked_by == request.user:
+    #         post.liked_by = None
+    #         post.save()
+    #     return Response(status=200)

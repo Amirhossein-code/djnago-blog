@@ -62,10 +62,3 @@ class CategoryViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-class SearchViewSet(ModelViewSet):
-    def get(self, request):
-        serializer = SearchSerializer(data=request.GET)
-        serializer.is_valid(raise_exception=True)
-        query = serializer.validated_data["query"]
-        results = Post.objects.filter(title__icontains=query)
-        return Response({"results": results})
