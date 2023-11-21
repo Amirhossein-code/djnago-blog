@@ -1,7 +1,8 @@
 from rest_framework_nested import routers
 from review.views import AuthorReviewViewSet, PostReviewViewSet
 from .views import AuthorViewSet, HomepageViewSet
-from posts.views import PostViewSet, CategoryViewSet
+from posts.views import PostViewSet
+from categories.views import CategoryViewSet
 
 router = routers.DefaultRouter()
 router.register("", HomepageViewSet, basename="")

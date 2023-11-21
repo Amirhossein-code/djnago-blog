@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Category
+from .models import Post
 
 
 # Register your models here.
@@ -25,9 +25,3 @@ class PostAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user.author
         super().save_model(request, obj, form, change)
-
-
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["id", "title", "tags"]
-    search_fields = ["title"]

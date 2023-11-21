@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "app",
     "posts",
+    "categories",
     "review",
     "core",
 ]

@@ -1,8 +1,6 @@
-from datetime import datetime
 from django_filters.rest_framework import FilterSet
 from django_filters import CharFilter
-from django_filters import rest_framework as filters
-from .models import Post, Category
+from .models import Category
 
 
 class CategoryFilter(FilterSet):

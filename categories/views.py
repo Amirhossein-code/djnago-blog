@@ -6,8 +6,8 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 
-from .filters import CategoryFilter, PostFilter
-from .models import Post, Category
+from .filters import CategoryFilter
+from .models import Category
 from .serializers import (
     CategoryWithPostsSerializer,
     IntroPostSerializer,
@@ -19,6 +19,7 @@ from .pagination import (
     CategoriesPagination,
 )
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from posts.models import Post
 
 
 # Create your views here.
