@@ -1,10 +1,8 @@
-from django.db.models import Manager
 from datetime import datetime
 from django_filters.rest_framework import FilterSet
 from django_filters import CharFilter
-import django_filters
 from django_filters import rest_framework as filters
-from .models import Post, Author, Category
+from .models import Post, Category
 
 
 class PostFilter(FilterSet):

@@ -1,39 +1,25 @@
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework import viewsets, status, generics
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import (
     IsAuthenticated,
-    AllowAny,
-    IsAdminUser,
-    IsAuthenticatedOrReadOnly,
 )
 
-from .filters import AuthorFilter, CategoryFilter, PostFilter
-from .models import Post, Category, Author
+from .filters import CategoryFilter, PostFilter
+from .models import Post, Category
 from .serializers import (
-    AuthorWithPostSerializer,
     CategoryWithPostsSerializer,
     IntroPostSerializer,
     CreatePostSerializer,
     CategorySerializer,
-    AuthorSerializer,
     MyPostsSerializer,
     PostSerializer,
     SearchSerializer,
-    SimpleAuthorSerializer,
-    SimplePostSerializer,
 )
 from .pagination import (
     FilteredPostsPagination,
     PostsPagination,
-    AuthorsPagination,
     CategoriesPagination,
 )
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly

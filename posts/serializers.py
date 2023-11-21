@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Category, Author
+from .models import Post, Category
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 

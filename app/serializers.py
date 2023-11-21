@@ -1,10 +1,9 @@
 from rest_framework import serializers
-from .models import Post, Category, Author
+from .models import Author
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 from posts.serializers import SimplePostSerializer
 
 
-# Author serialziers
 class AuthorWithPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_id = serializers.IntegerField(source="user.id", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
