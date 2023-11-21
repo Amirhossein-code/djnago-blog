@@ -11,15 +11,11 @@ from .models import Post, Category
 from .serializers import (
     CategoryWithPostsSerializer,
     IntroPostSerializer,
-    CreatePostSerializer,
     CategorySerializer,
-    MyPostsSerializer,
-    PostSerializer,
     SearchSerializer,
 )
 from .pagination import (
     FilteredPostsPagination,
-    PostsPagination,
     CategoriesPagination,
 )
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
@@ -71,5 +67,4 @@ class SearchViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         query = serializer.validated_data["query"]
         results = Post.objects.filter(title__icontains=query)
-        # You can perform additional filtering, sorting, or pagination here if needed
         return Response({"results": results})
