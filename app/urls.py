@@ -1,12 +1,13 @@
 from rest_framework_nested import routers
-from . import views
 from review.views import AuthorReviewViewSet, PostReviewViewSet
+from .views import AuthorViewSet, HomepageViewSet
+from posts.views import PostViewSet, CategoryViewSet
 
 router = routers.DefaultRouter()
-router.register("", views.HomepageViewSet, basename="")
-router.register("posts", views.PostViewSet, basename="posts")
-router.register("categories", views.CategoryViewSet, basename="categories")
-router.register("authors", views.AuthorViewSet, basename="authors")
+router.register("", HomepageViewSet, basename="")
+router.register("posts", PostViewSet, basename="posts")
+router.register("categories", CategoryViewSet, basename="categories")
+router.register("authors", AuthorViewSet, basename="authors")
 
 posts_router = routers.NestedDefaultRouter(router, "posts", lookup="post")
 posts_router.register("reviews", PostReviewViewSet, basename="post-reviews")
