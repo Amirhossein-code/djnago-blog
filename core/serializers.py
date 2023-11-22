@@ -28,6 +28,15 @@ class UserSerializer(BaseUserSerializer):
         ]
 
 
+class SecureUserSerializer(BaseUserSerializer):
+    class Meta(BaseUserSerializer.Meta):
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+        ]
+
+
 # Note for adding additional fields for user creation
 # we should not support fields outside the user model here like the fields in author model
 # but if that is the case and we want to we should do so in the front end
