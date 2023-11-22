@@ -1,27 +1,23 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My Blog</title>
+    <title>Post List</title>
   </head>
   <body>
-    <h1>Welcome to My Blog</h1>
-
-    <div class="post">
-      <h2>Sample Blog Post 1</h2>
-      <p>Published on: September 1, 2023</p>
-      <p>This is the content of the first blog post.</p>
-    </div>
-
-    <div class="post">
-      <h2>Sample Blog Post 2</h2>
-      <p>Published on: September 5, 2023</p>
-      <p>This is the content of the second blog post.</p>
-    </div>
-
-    <div class="post">
-      <h2>Sample Blog Post 3</h2>
-      <p>Published on: September 10, 2023</p>
-      <p>This is the content of the third blog post.</p>
-    </div>
+    <h1>Post List</h1>
+    <ul>
+      {% for post in posts %}
+      <li>
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
+        <p>Created at: {{ post.created_at }}</p>
+        <p>Author: {{ post.author }}</p>
+      </li>
+      {% empty %}
+      <li>No posts available.</li>
+      {% endfor %}
+    </ul>
   </body>
 </html>

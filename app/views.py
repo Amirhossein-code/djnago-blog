@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -21,11 +22,14 @@ from .pagination import (
     AuthorsPagination,
 )
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from posts.models import Post
 
 
 class HomepageViewSet(viewsets.ViewSet):
+    posts = Post.objects.all()
+
     def list(self, request):
-        return Response("API is Running This Is HomePage")
+        return render(request, "app/index.html", {"posts": self.posts})
 
 
 class AuthorViewSet(ModelViewSet):
@@ -61,8 +65,8 @@ class AuthorViewSet(ModelViewSet):
         This endpoint is the only place they can complete all their user
         related stuff All the author models fields
         Note : for implementing the first_name , ... the  User model fields
-        Use the User model Endpoints provided by djoser check urls-docs for
-        more info
+        Use the User model Endpoints provided by djoser check Documentation
+        directory for more info
         """
         author = Author.objects.get(user_id=request.user.id)
         if request.method == "GET":
@@ -87,7 +91,8 @@ class AuthorViewSet(ModelViewSet):
         """
         Retrieve all posts of a specific author
         Not used for retreving all posts of the logged in user
-        check out : /posts/my_posts
+        check out : /posts/my-posts  for retreving all the posts
+        of the logged in user
         """
         author = self.get_object()
         posts = author.posts.all()
