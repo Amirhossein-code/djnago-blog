@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from search.models import QueryLog
 from search.pagination import SearchResultPagination
 from .serializers import (
     SearchAuthorSerializer,
@@ -37,13 +38,8 @@ class SearchViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         query = serializer.validated_data["query"]
 
-        # Check to see if the query is at least 3 charachters
-        #custome validator implemented for this purpose
-        # if len(query) < 3:
-        #     return Response(
-        #         "Query must be at least 3 characters long.",
-        #         status=status.HTTP_400_BAD_REQUEST,
-        #     )
+        # save the query set inside database
+        self.save_query_log(query)
 
         try:
             # Searching
@@ -82,7 +78,7 @@ class SearchViewSet(ModelViewSet):
                 "No objects found matching the query.",
                 status=status.HTTP_404_NOT_FOUND,
             )
-            
+
         # review_result can be implemented but it seems useless
         # Serialize the results from different models
         post_serializer = SearchPostSerializer(post_results, many=True)
@@ -96,3 +92,7 @@ class SearchViewSet(ModelViewSet):
             "authors": author_serializer.data,
         }
         return Response({"results": results})
+
+    def save_query_log(self, query):
+        query_log = QueryLog(query=query)
+        query_log.save()
