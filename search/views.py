@@ -8,6 +8,7 @@ from search.pagination import SearchResultPagination
 from .serializers import (
     SearchAuthorSerializer,
     SearchSerializer,
+    SearchNothingSerializer,
 )
 from posts.models import Post
 from categories.models import Category
@@ -22,6 +23,13 @@ User = get_user_model()
 
 
 class SearchViewSet(ModelViewSet):
+    """
+    /search/?query=example
+    Search the post, category and author models to find relevant objects
+    the query is retrieved from the URL and the object returned in json format
+    """
+
+    http_method_names = ["get"]
     permission_classes = [IsAuthenticated]
     pagination_class = SearchResultPagination
     serializer_class = SearchSerializer
@@ -35,7 +43,9 @@ class SearchViewSet(ModelViewSet):
         query = serializer.validated_data["query"]
         # Searching
         post_results = Post.objects.filter(
-            Q(title__icontains=query) | Q(tags__name__icontains=query)
+            Q(title__icontains=query)
+            | Q(content__icontains=query)
+            | Q(tags__name__icontains=query)
         )
         category_results = Category.objects.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)
@@ -47,14 +57,17 @@ class SearchViewSet(ModelViewSet):
             | Q(user__last_name__icontains=query)
             | Q(user__username__icontains=query)
         )
+
         # Serialize the results from different models
         post_serializer = SearchPostSerializer(post_results, many=True)
         category_serializer = SearchCategorySerializer(category_results, many=True)
         author_serializer = SearchAuthorSerializer(author_results, many=True)
+
         # Convert the serializer data to JSON-serializable format
         serialized_post_results = post_serializer.data
         serialized_category_results = category_serializer.data
         serialized_author_results = author_serializer.data
+
         # Return the combined results
         results = {
             "posts": serialized_post_results,
