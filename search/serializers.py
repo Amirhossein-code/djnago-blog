@@ -3,10 +3,10 @@ from taggit.serializers import TagListSerializerField, TaggitSerializer
 from posts.models import Post
 from categories.models import Category
 from app.models import Author
-
+from .validators import validate_query_length
 
 class SearchSerializer(serializers.Serializer):
-    query = serializers.CharField(max_length=255, required=True)
+    query = serializers.CharField(validators=[validate_query_length])
 
 
 class SearchPostSerializer(TaggitSerializer, serializers.ModelSerializer):

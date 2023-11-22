@@ -1,23 +1,18 @@
 from django.db.models import Q
-from django.db import models
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
 from search.pagination import SearchResultPagination
 from .serializers import (
     SearchAuthorSerializer,
     SearchSerializer,
-    SearchNothingSerializer,
 )
 from posts.models import Post
 from categories.models import Category
 from app.models import Author
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from .serializers import SearchCategorySerializer, SearchPostSerializer
-from core.serializers import SecureUserSerializer
-from taggit.models import Tag
 
 User = get_user_model()
 
@@ -30,9 +25,9 @@ class SearchViewSet(ModelViewSet):
     """
 
     http_method_names = ["get"]
+    serializer_class = SearchSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = SearchResultPagination
-    serializer_class = SearchSerializer
 
     def get_queryset(self):
         return None
@@ -41,37 +36,63 @@ class SearchViewSet(ModelViewSet):
         serializer = SearchSerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
         query = serializer.validated_data["query"]
-        # Searching
-        post_results = Post.objects.filter(
-            Q(title__icontains=query)
-            | Q(content__icontains=query)
-            | Q(tags__name__icontains=query)
-        )
-        category_results = Category.objects.filter(
-            Q(title__icontains=query) | Q(tags__name__icontains=query)
-        )
-        author_results = Author.objects.filter(
-            Q(bio__icontains=query)
-            | Q(tags__name__icontains=query)
-            | Q(user__first_name__icontains=query)
-            | Q(user__last_name__icontains=query)
-            | Q(user__username__icontains=query)
-        )
 
+        # Check to see if the query is at least 3 charachters
+        #custome validator implemented for this purpose
+        # if len(query) < 3:
+        #     return Response(
+        #         "Query must be at least 3 characters long.",
+        #         status=status.HTTP_400_BAD_REQUEST,
+        #     )
+
+        try:
+            # Searching
+            post_results = Post.objects.filter(
+                Q(title__icontains=query)
+                | Q(content__icontains=query)
+                | Q(tags__name__icontains=query)
+            ).prefetch_related("tags")
+
+            category_results = Category.objects.filter(
+                Q(title__icontains=query) | Q(tags__name__icontains=query)
+            ).prefetch_related("tags")
+
+            author_results = (
+                Author.objects.filter(
+                    Q(bio__icontains=query)
+                    | Q(tags__name__icontains=query)
+                    | Q(user__first_name__icontains=query)
+                    | Q(user__last_name__icontains=query)
+                    | Q(user__username__icontains=query)
+                )
+                .select_related("user")
+                .prefetch_related("tags")
+            )
+        except Exception as e:
+            return Response(
+                "An error occurred during the search process.",
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        if not (
+            post_results.exists()
+            or category_results.exists()
+            or author_results.exists()
+        ):
+            return Response(
+                "No objects found matching the query.",
+                status=status.HTTP_404_NOT_FOUND,
+            )
+            
+        # review_result can be implemented but it seems useless
         # Serialize the results from different models
         post_serializer = SearchPostSerializer(post_results, many=True)
         category_serializer = SearchCategorySerializer(category_results, many=True)
         author_serializer = SearchAuthorSerializer(author_results, many=True)
 
-        # Convert the serializer data to JSON-serializable format
-        serialized_post_results = post_serializer.data
-        serialized_category_results = category_serializer.data
-        serialized_author_results = author_serializer.data
-
         # Return the combined results
         results = {
-            "posts": serialized_post_results,
-            "categories": serialized_category_results,
-            "authors": serialized_author_results,
+            "posts": post_serializer.data,
+            "categories": category_serializer.data,
+            "authors": author_serializer.data,
         }
         return Response({"results": results})
