@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from search.pagination import SearchResultPagination
 from .serializers import (
+    SearchAuthorSerializer,
     SearchSerializer,
 )
 from posts.models import Post
@@ -37,27 +38,27 @@ class SearchViewSet(ModelViewSet):
             Q(title__icontains=query) | Q(tags__name__icontains=query)
         )
         category_results = Category.objects.filter(
-            title__icontains=query | Q(tags__name__icontains=query)
+            Q(title__icontains=query) | Q(tags__name__icontains=query)
         )
-        user_results = User.objects.filter(
-            models.Q(first_name__icontains=query)
-            | models.Q(last_name__icontains=query)
-            | models.Q(username__icontains=query)
+        author_results = Author.objects.filter(
+            Q(bio__icontains=query)
             | Q(tags__name__icontains=query)
+            | Q(user__first_name__icontains=query)
+            | Q(user__last_name__icontains=query)
+            | Q(user__username__icontains=query)
         )
-        author_result = Author.
         # Serialize the results from different models
         post_serializer = SearchPostSerializer(post_results, many=True)
         category_serializer = SearchCategorySerializer(category_results, many=True)
-        user_serializer = SecureUserSerializer(user_results, many=True)
+        author_serializer = SearchAuthorSerializer(author_results, many=True)
         # Convert the serializer data to JSON-serializable format
         serialized_post_results = post_serializer.data
         serialized_category_results = category_serializer.data
-        serialized_user_results = user_serializer.data
+        serialized_author_results = author_serializer.data
         # Return the combined results
         results = {
             "posts": serialized_post_results,
             "categories": serialized_category_results,
-            "users": serialized_user_results,
+            "authors": serialized_author_results,
         }
         return Response({"results": results})
