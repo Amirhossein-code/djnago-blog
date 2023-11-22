@@ -39,7 +39,8 @@ class SearchViewSet(ModelViewSet):
         query = serializer.validated_data["query"]
 
         # save the query set inside database
-        self.save_query_log(query)
+        user = self.request.user
+        self.save_query_log(query, user)
 
         try:
             # Searching
@@ -93,6 +94,6 @@ class SearchViewSet(ModelViewSet):
         }
         return Response({"results": results})
 
-    def save_query_log(self, query):
-        query_log = QueryLog(query=query)
+    def save_query_log(self, query, user):
+        query_log = QueryLog(query=query, user=user)
         query_log.save()
