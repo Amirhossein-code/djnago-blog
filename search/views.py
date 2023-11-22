@@ -9,14 +9,13 @@ from .serializers import (
     SearchSerializer,
 )
 from posts.models import Post
-from app.models import Author
 from categories.models import Category
+from app.models import Author
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from categories.serializers import CategorySerializer
-from app.serializers import SimpleAuthorSerializer
-from posts.serializers import SimplePostSerializer
+from .serializers import SearchCategorySerializer, SearchPostSerializer
 from core.serializers import SecureUserSerializer
+from taggit.models import Tag
 
 User = get_user_model()
 
@@ -34,16 +33,22 @@ class SearchViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         query = serializer.validated_data["query"]
         # Searching
-        post_results = Post.objects.filter(title__icontains=query)
-        category_results = Category.objects.filter(title__icontains=query)
+        post_results = Post.objects.filter(
+            Q(title__icontains=query) | Q(tags__name__icontains=query)
+        )
+        category_results = Category.objects.filter(
+            title__icontains=query | Q(tags__name__icontains=query)
+        )
         user_results = User.objects.filter(
             models.Q(first_name__icontains=query)
             | models.Q(last_name__icontains=query)
             | models.Q(username__icontains=query)
+            | Q(tags__name__icontains=query)
         )
+        author_result = Author.
         # Serialize the results from different models
-        post_serializer = SimplePostSerializer(post_results, many=True)
-        category_serializer = CategorySerializer(category_results, many=True)
+        post_serializer = SearchPostSerializer(post_results, many=True)
+        category_serializer = SearchCategorySerializer(category_results, many=True)
         user_serializer = SecureUserSerializer(user_results, many=True)
         # Convert the serializer data to JSON-serializable format
         serialized_post_results = post_serializer.data
