@@ -17,9 +17,14 @@ class Post(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT, related_name="posts")
     tags = TaggableManager()
-    liked_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.titles
+
+
+class Likes(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="userlike"
+    )
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="postlike")

@@ -1,19 +1,21 @@
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-
-
 from .filters import PostFilter
-from .models import Post
+from .models import Likes, Post
 from .serializers import (
     CreatePostSerializer,
     MyPostsSerializer,
+    PostLikeSerializer,
     PostSerializer,
+    PostWithLikeSerializer,
 )
 from .pagination import (
     PostsPagination,
 )
+from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthorOrReadOnly
 from rest_framework import status
 from django.contrib.auth.models import AnonymousUser
@@ -55,7 +57,9 @@ class PostViewSet(ModelViewSet):
             return CreatePostSerializer
         if self.action == "my-posts":
             return MyPostsSerializer
-        return PostSerializer
+        if self.action == "like":
+            return PostLikeSerializer
+        return PostWithLikeSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user.author)
@@ -86,19 +90,26 @@ class PostViewSet(ModelViewSet):
             serializer = MyPostsSerializer(posts, many=True)
             return Response(serializer.data)
 
-    # the like feature needs improvment and not ready
-    # @action(detail=True, methods=["post"])
-    # def like(self, request, pk=None):
-    #     post = self.get_object()
-    #     if post.liked_by is None:
-    #         post.liked_by = request.user
-    #         post.save()
-    #     return Response(status=200)
+    @action(
+        detail=True,
+        methods=["POST"],
+        permission_classes=[IsAuthenticated],
+    )
+    def like(self, request, pk=None):
+        user = self.request.user
+        post = get_object_or_404(Post, id=pk)
+        current_likes = post.likes
+        liked = Likes.objects.filter(user=user, post=post)  # .exists()
 
-    # @action(detail=True, methods=["post"])
-    # def unlike(self, request, pk=None):
-    #     post = self.get_object()
-    #     if post.liked_by == request.user:
-    #         post.liked_by = None
-    #         post.save()
-    #     return Response(status=200)
+        if not liked:
+            Likes.objects.create(user=user, post=post)
+            current_likes += 1
+        else:
+            Likes.objects.filter(user=user, post=post).delete()
+            current_likes -= 1
+
+        post.likes = current_likes
+        post.save()
+
+        serializer = PostLikeSerializer({"likes": post.likes, "is_liked": not liked})
+        return Response(serializer.data)

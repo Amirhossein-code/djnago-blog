@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Category
+from .models import Likes, Post, Category
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 
@@ -25,7 +25,6 @@ class CreatePostSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
-    liked_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Post
@@ -38,16 +37,36 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             "category",
             "posted_at",
             "last_updated",
-            "liked_by",
             "tags",
         ]
 
-    def update(self, instance, validated_data):
-        liked_by = validated_data.get("liked_by", None)
-        if liked_by and instance.liked_by != liked_by:
-            instance.liked_by = liked_by
-            instance.save()
-        return instance
+
+class PostLikeSerializer(serializers.Serializer):
+    likes = serializers.IntegerField(read_only=True)
+    is_liked = serializers.BooleanField()
+
+
+class PostWithLikeSerializer(serializers.ModelSerializer):
+    # Existing serializer fields
+
+    is_liked = serializers.SerializerMethodField()
+
+    def get_is_liked(self, obj):
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            user = request.user
+            return Likes.objects.filter(user=user, post=obj).exists()
+        return False
+
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "title",
+            "content",
+            "category",
+            "is_liked",
+        ]
 
 
 class MyPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
