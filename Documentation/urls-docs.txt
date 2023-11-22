@@ -16,17 +16,17 @@ Djoser Endpoints (Authentication BackEnd) prefix all with /auth/
 /jwt/verify/ (JSON Web Token Authentication)
 
 Authors end-points 
-/authors/                  List all Authors 
-/authors/<id>              see a specific author with 2 posts 
-/authors/me                logged in user can see profile 
+/authors/                     List all Authors 
+/authors/<id>                 see a specific author with 2 posts 
+/authors/me                   logged in user can see profile 
 /authors/<id>/posts           see all posts of the given author id
 /authors/<id>/reviews         See all related author reviews
 /authors/<id>/reviews/<id>    See specific review / Update 
 
 Posts Endpoint
-/posts                         List all posts 
-/posts/my_posts                See all logged in users posts
-/posts/<id>                    see specific post
+/posts                         List of all posts 
+/posts/my-posts                logged in user can see all thier posts
+/posts/<id>                    see specific post 
 /posts/<id>/reviews            see post reviews
 /posts/<id>/reviews/<id>       see a specific post reviews
 
@@ -35,3 +35,5 @@ Categories Endpoint
 /categories/<id>            see specific category with related posts (Just Into level need to implement filteration to show a number of best posts)
 /categories/<id>/posts      see all posts of a specific category
 
+Search Endpoint
+/search/?query=example      Authenticated users can search categories, authors and posts with 1 query

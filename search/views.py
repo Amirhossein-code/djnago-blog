@@ -38,7 +38,7 @@ class SearchViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         query = serializer.validated_data["query"]
 
-        # save the query set inside database
+        # save the query set inside database with the associated user
         user = self.request.user
         self.save_query_log(query, user)
 
