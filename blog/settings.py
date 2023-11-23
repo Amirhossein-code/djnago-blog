@@ -1,36 +1,15 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 from datetime import timedelta
+from dotenv import load_dotenv
 
 load_dotenv()
 
-DEBUG = True
+SECRET_KEY = os.getenv("SECRET_KEY", "")
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", False) == "True"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("MYSQL_DATABASE"),
-        "USER": os.getenv("MYSQL_USER"),
-        "PASSWORD": os.getenv("MSQL_PASS"),
-        "HOST": os.getenv("DB_HOST"),
-    }
-}
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": os.getenv("MYSQL_DATABASE"),
-#         "USER": os.getenv("MYSQL_USER"),
-#         "PASSWORD": os.getenv("MYSQL_PASSWORD"),
-#         "HOST": os.getenv("DB_HOST"),
-#         "PORT": "3306",
-#     }
-# }
-
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -148,3 +127,27 @@ SIMPLE_JWT = {
 }
 
 TAGGIT_CASE_INSENSITIVE = True
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": config("DB_NAME", default=""),
+#         "USER": config("DB_USER", default=""),
+#         "PASSWORD": config("DB_PASSWORD", default=""),
+#         "HOST": config("DB_HOST", default=""),
+#         "PORT": "3306",
+#     }
+# }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("DB_NAME", ""),
+        "USER": os.getenv("DB_USER", ""),
+        "PASSWORD": os.getenv("DB_PASSWORD", ""),
+        "HOST": os.getenv("DB_HOST", ""),
+        "PORT": "3306",
+    }
+}

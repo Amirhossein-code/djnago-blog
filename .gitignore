@@ -4,3 +4,4 @@ access_token_dev.txt
 *.pyc
 Dockerfile
 docker-compose.yml
+.env.db

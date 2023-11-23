@@ -16,6 +16,7 @@ pillow = "*"
 django-autoslug = "*"
 django-filter = "*"
 django-taggit = "*"
+python-decouple = "*"
 
 [dev-packages]
 pytest = "*"
