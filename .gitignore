@@ -1,7 +1,4 @@
-# Ignore .env files
-.env
-access_token_dev.txt
 *.pyc
-Dockerfile
-docker-compose.yml
+access_token_dev.txt
+.env
 .env.db
