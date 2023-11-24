@@ -1,0 +1,42 @@
+To run this project with docker :
+
+1.Create .env file:
+```
+DB_ENGINE=django.db.backends.mysql
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+SECRET_KEY=
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+```
+Note : provide the essential credentials
+
+2.Create .env.db file
+```
+MYSQL_DATABASE=myblog
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_ROOT_PASSWORD=
+```
+Note : provide the essential credentials
+
+3.Run the following command 
+```
+docker-compose up --build 
+```
+
+4-Runing migrations:
+
+4.1 First open a shell terminal inside django container with
+```
+docker exec -it <container_id> sh
+```
+4.2
+```
+python manage.py migrate
+```
+
+All set ready to go
+
