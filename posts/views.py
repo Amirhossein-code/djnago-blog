@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthorOrReadOnly
 from rest_framework import status
 from django.contrib.auth.models import AnonymousUser
+from django.urls import reverse
 
 
 # Create your views here.
@@ -113,3 +114,6 @@ class PostViewSet(ModelViewSet):
 
         serializer = PostLikeSerializer({"likes": post.likes, "is_liked": not liked})
         return Response(serializer.data)
+
+    def get_absolute_url(self):
+        return reverse("posts-detail", args=[str(self.id)])

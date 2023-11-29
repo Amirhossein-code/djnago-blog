@@ -47,14 +47,14 @@ class CategoryViewSet(ModelViewSet):
             return CategoryWithPostsSerializer
         return CategorySerializer
 
-    @action(
-        detail=True,
-        methods=["GET"],
-        permission_classes=[IsAuthenticated],
-        pagination_class=FilteredPostsPagination,
-    )
-    def posts(self, request, pk=None):
-        category = self.get_object()
-        posts = category.posts.all()
-        serializer = SimplePostSerializer(posts, many=True)
-        return Response(serializer.data)
+    # @action(
+    #     detail=True,
+    #     methods=["GET"],
+    #     permission_classes=[IsAuthenticated],
+    #     pagination_class=FilteredPostsPagination,
+    # )
+    # def posts(self, request, pk=None):
+    #     category = self.get_object()
+    #     posts = category.posts.all()
+    #     serializer = SimplePostSerializer(posts, many=True)
+    #     return Response(serializer.data)
