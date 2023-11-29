@@ -4,6 +4,8 @@ from posts.models import Post
 from categories.models import Category
 from app.models import Author
 from .validators import validate_query_length
+from rest_framework.reverse import reverse
+
 
 class SearchSerializer(serializers.Serializer):
     query = serializers.CharField(validators=[validate_query_length])

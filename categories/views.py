@@ -10,7 +10,7 @@ from .filters import CategoryFilter
 from .models import Category
 from .serializers import (
     CategoryWithPostsSerializer,
-    IntroPostSerializer,
+    SimplePostSerializer,
     CategorySerializer,
 )
 from .pagination import (
@@ -36,7 +36,6 @@ class CategoryViewSet(ModelViewSet):
     pagination_class = CategoriesPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = CategoryFilter
-    # lookup_field = "slug"
 
     def get_permissions(self):
         if self.request.method == "POST":
@@ -57,5 +56,5 @@ class CategoryViewSet(ModelViewSet):
     def posts(self, request, pk=None):
         category = self.get_object()
         posts = category.posts.all()
-        serializer = IntroPostSerializer(posts, many=True)
+        serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)

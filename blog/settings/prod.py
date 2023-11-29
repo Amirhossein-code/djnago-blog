@@ -50,7 +50,7 @@ DATABASES = {
         "USER": "root",
         "PASSWORD": "MySQL124@SE",
         "HOST": "localhost",
-        "PORT": 3306,
+        "PORT": '3306',
     }
 }
 

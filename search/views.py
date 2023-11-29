@@ -34,7 +34,7 @@ class SearchViewSet(ModelViewSet):
         return None
 
     def list(self, request):
-        serializer = SearchSerializer(data=request.GET)
+        serializer = SearchSerializer(data=request.GET, context={"request": None})
         serializer.is_valid(raise_exception=True)
         query = serializer.validated_data["query"]
 
@@ -82,7 +82,9 @@ class SearchViewSet(ModelViewSet):
 
         # review_result can be implemented but it seems useless
         # Serialize the results from different models
-        post_serializer = SearchPostSerializer(post_results, many=True)
+        post_serializer = SearchPostSerializer(
+            post_results, many=True, context={"request": None}
+        )
         category_serializer = SearchCategorySerializer(category_results, many=True)
         author_serializer = SearchAuthorSerializer(author_results, many=True)
 
