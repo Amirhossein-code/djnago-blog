@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Author
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 from posts.serializers import SimplePostSerializer
+from django.urls import reverse
 
 
 class AuthorWithPostSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -30,9 +31,25 @@ class AuthorWithPostSerializer(TaggitSerializer, serializers.ModelSerializer):
         ]
 
     def get_posts(self, author):
-        posts = author.posts.all()[:2]
+        posts = author.posts.all()
         serializer = SimplePostSerializer(posts, many=True, read_only=True)
-        return serializer.data
+
+        # Manually create hyperlinks for each post
+        request = self.context.get("request")
+
+        return [
+            {
+                "id": post["id"],
+                "title": post["title"],
+                "category": post["category"],
+                "url": request.build_absolute_uri(
+                    reverse("posts-detail", args=[str(post["id"])])
+                )
+                if request
+                else None,
+            }
+            for post in serializer.data
+        ]
 
 
 class AuthorSerializer(TaggitSerializer, serializers.ModelSerializer):

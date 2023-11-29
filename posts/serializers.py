@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Likes, Post, Category
 from taggit.serializers import TagListSerializerField, TaggitSerializer
+from rest_framework.reverse import reverse
 
 
 # Post Serializers
@@ -40,6 +41,23 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             "tags",
         ]
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # Check if instance.category is not None before creating post_url
+        if instance.category:
+            # Manually create hyperlink for the post
+            request = self.context.get("request")
+            post_url = reverse("post-detail", args=[str(instance.id)])
+            representation["post_url"] = (
+                request.build_absolute_uri(post_url) if request else None
+            )
+        else:
+            # Handle the case where category is None
+            representation["post_url"] = None
+
+        return representation
+
 
 class PostLikeSerializer(serializers.Serializer):
     likes = serializers.IntegerField(read_only=True)
@@ -47,8 +65,6 @@ class PostLikeSerializer(serializers.Serializer):
 
 
 class PostWithLikeSerializer(serializers.ModelSerializer):
-    # Existing serializer fields
-
     is_liked = serializers.SerializerMethodField()
 
     def get_is_liked(self, obj):
@@ -90,10 +106,23 @@ class SimplePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = [
+            "id",
             "title",
             "content",
             "category",
         ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # Manually create hyperlink for the post
+        request = self.context.get("request")
+        post_url = reverse("posts-detail", args=[str(instance.id)])
+        representation["post_url"] = (
+            request.build_absolute_uri(post_url) if request else None
+        )
+
+        return representation
 
 
 class IntroPostSerializer(serializers.ModelSerializer):
@@ -102,41 +131,3 @@ class IntroPostSerializer(serializers.ModelSerializer):
         fields = [
             "title",
         ]
-
-
-# Category serialziers
-class CategorySerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
-
-    class Meta:
-        model = Category
-        fields = [
-            "id",
-            "title",
-            "slug",
-            "tags",
-        ]
-
-
-class CategoryWithPostsSerializer(TaggitSerializer, serializers.ModelSerializer):
-    posts = serializers.SerializerMethodField()
-    tags = TagListSerializerField()
-
-    class Meta:
-        model = Category
-        fields = [
-            "id",
-            "title",
-            "slug",
-            "tags",
-            "posts",
-        ]
-
-    def get_posts(self, category):
-        posts = category.posts.all()[:2]
-        serializer = IntroPostSerializer(posts, many=True, read_only=True)
-        return serializer.data
-
-
-class SearchSerializer(serializers.Serializer):
-    query = serializers.CharField()

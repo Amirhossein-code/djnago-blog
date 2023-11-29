@@ -49,9 +49,17 @@ class AuthorViewSet(ModelViewSet):
         return SimpleAuthorSerializer
 
     def get_serializer_context(self):
+        # Get the default context
         context = super().get_serializer_context()
+
+        # Add custom context data, if needed
+        # For example, adding the request to the context
+        context["request"] = self.request
+
+        # Add author_id to context if available in kwargs
         author_id = self.kwargs.get("pk")
         context["author_id"] = author_id
+
         return context
 
     @action(
