@@ -48,16 +48,5 @@ class CategoryViewSet(ModelViewSet):
             return CategoryWithPostsSerializer
         return CategorySerializer
 
-    # @action(
-    #     detail=True,
-    #     methods=["GET"],
-    #     permission_classes=[IsAuthenticated],
-    #     pagination_class=FilteredPostsPagination,
-    # )
-    # def posts(self, request, pk=None):
-    #     category = self.get_object()
-    #     posts = category.posts.all()
-    #     serializer = SimplePostSerializer(posts, many=True)
-    #     return Response(serializer.data)
     def get_absolute_url(self):
         return reverse("categories-detail", args=[str(self.id)])

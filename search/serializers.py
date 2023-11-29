@@ -23,6 +23,18 @@ class SearchPostSerializer(TaggitSerializer, serializers.ModelSerializer):
             "tags",
         ]
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # Manually create hyperlink for the post
+        request = self.context.get("request")
+        post_url = reverse("posts-detail", args=[str(instance.id)])
+        representation["post_url"] = (
+            request.build_absolute_uri(post_url) if request else None
+        )
+
+        return representation
+
 
 class SearchCategorySerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
@@ -64,3 +76,15 @@ class SearchAuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
             "profile_image",
             "tags",
         ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # Manually create hyperlink for the author
+        request = self.context.get("request")
+        author_url = reverse("authors-detail", args=[str(instance.id)])
+        representation["author_url"] = (
+            request.build_absolute_uri(author_url) if request else None
+        )
+
+        return representation

@@ -83,12 +83,14 @@ class SearchViewSet(ModelViewSet):
         # review_result can be implemented but it seems useless
         # Serialize the results from different models
         post_serializer = SearchPostSerializer(
-            post_results, many=True, context={"request": None}
+            post_results, many=True, context={"request": self.request}
         )
         category_serializer = SearchCategorySerializer(
             category_results, many=True, context={"request": self.request}
         )
-        author_serializer = SearchAuthorSerializer(author_results, many=True)
+        author_serializer = SearchAuthorSerializer(
+            author_results, many=True, context={"request": self.request}
+        )
 
         # Return the combined results
         results = {

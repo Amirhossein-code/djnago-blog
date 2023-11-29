@@ -22,6 +22,7 @@ from .pagination import (
 )
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from posts.models import Post
+from django.urls import reverse
 
 
 class HomepageViewSet(viewsets.ViewSet):
@@ -97,3 +98,6 @@ class AuthorViewSet(ModelViewSet):
         posts = author.posts.all()
         serializer = SimplePostSerializer(posts, many=True)
         return Response(serializer.data)
+
+    def get_absolute_url(self):
+        return reverse("authors-detail", args=[str(self.id)])
