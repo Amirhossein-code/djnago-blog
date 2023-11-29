@@ -35,6 +35,18 @@ class SearchCategorySerializer(TaggitSerializer, serializers.ModelSerializer):
             "tags",
         ]
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # Manually create hyperlink for the category
+        request = self.context.get("request")
+        category_url = reverse("categories-detail", args=[str(instance.id)])
+        representation["category_url"] = (
+            request.build_absolute_uri(category_url) if request else None
+        )
+
+        return representation
+
 
 class SearchAuthorSerializer(TaggitSerializer, serializers.ModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)

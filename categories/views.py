@@ -19,6 +19,7 @@ from .pagination import (
 )
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from posts.models import Post
+from django.urls import reverse
 
 
 # Create your views here.
@@ -58,3 +59,5 @@ class CategoryViewSet(ModelViewSet):
     #     posts = category.posts.all()
     #     serializer = SimplePostSerializer(posts, many=True)
     #     return Response(serializer.data)
+    def get_absolute_url(self):
+        return reverse("categories-detail", args=[str(self.id)])

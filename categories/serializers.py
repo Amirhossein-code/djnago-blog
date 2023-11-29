@@ -58,7 +58,7 @@ class CategoryWithPostsSerializer(TaggitSerializer, serializers.ModelSerializer)
         return [
             {
                 "id": post["id"],
-                "title": post["title"],  # Adjust based on your actual field names
+                "title": post["title"],
                 "category": post["category"],
                 "url": request.build_absolute_uri(
                     reverse("posts-detail", args=[str(post["id"])])

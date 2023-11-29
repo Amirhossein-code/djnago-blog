@@ -85,7 +85,9 @@ class SearchViewSet(ModelViewSet):
         post_serializer = SearchPostSerializer(
             post_results, many=True, context={"request": None}
         )
-        category_serializer = SearchCategorySerializer(category_results, many=True)
+        category_serializer = SearchCategorySerializer(
+            category_results, many=True, context={"request": self.request}
+        )
         author_serializer = SearchAuthorSerializer(author_results, many=True)
 
         # Return the combined results
