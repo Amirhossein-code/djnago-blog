@@ -3,11 +3,11 @@ To run this project with docker :
 1.Create .env file:
 ```
 DB_ENGINE=django.db.backends.mysql
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-SECRET_KEY=
+DB_NAME=SET_DATABSE_NAME
+DB_USER=SET_DATABASE_USER
+DB_PASSWORD=SET_DATABSE_PASS
+DB_HOST=db
+SECRET_KEY=%na*knyglp1q^(7xz_r*d6)iz9n)ocy=ko(_a5xip5jg*#^trhb-$*tk+fefps@kqa*e0c-0papxe%jzcvs7d@yij1jz1sc3cmqd
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 ```
@@ -15,10 +15,10 @@ Note : provide the essential credentials
 
 2.Create .env.db file
 ```
-MYSQL_DATABASE=myblog
-MYSQL_USER=
-MYSQL_PASSWORD=
-MYSQL_ROOT_PASSWORD=
+MYSQL_DATABASE=SET_DATABSE_NAME
+MYSQL_USER=SET_DATABASE_USER
+MYSQL_PASSWORD=SET_DATABSE_PASS
+MYSQL_ROOT_PASSWORD=SET_DATABSE_ROOT_PASS
 ```
 Note : provide the essential credentials
 
