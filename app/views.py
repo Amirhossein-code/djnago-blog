@@ -1,6 +1,7 @@
+from django.urls import reverse
 from django.shortcuts import render
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -20,9 +21,8 @@ from .pagination import (
     FilteredPostsPagination,
     AuthorsPagination,
 )
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAuthorOwner
 from posts.models import Post
-from django.urls import reverse
 
 
 class HomepageViewSet(viewsets.ViewSet):
@@ -49,26 +49,20 @@ class AuthorViewSet(ModelViewSet):
         return SimpleAuthorSerializer
 
     def get_serializer_context(self):
-        # Get the default context
         context = super().get_serializer_context()
-
-        # Add custom context data, if needed
-        # For example, adding the request to the context
         context["request"] = self.request
-
-        # Add author_id to context if available in kwargs
         author_id = self.kwargs.get("pk")
         context["author_id"] = author_id
-
         return context
 
     @action(
         detail=False,
         methods=["GET", "PUT", "DELETE"],
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticated, IsAuthorOwner],
     )
     def me(self, request):
         """
+        Protected endpoint can only be accessed by the logged in user
         Users can see their own profile using this endpoint
         This endpoint is the only place they can complete all their user
         related stuff All the author models fields
@@ -76,7 +70,10 @@ class AuthorViewSet(ModelViewSet):
         Use the User model Endpoints provided by djoser check Documentation
         directory for more info
         """
-        author = Author.objects.get(user_id=request.user.id)
+        try:
+            author = Author.objects.get(user_id=request.user.id)
+        except Author.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         if request.method == "GET":
             serializer = AuthorSerializer(author)
             return Response(serializer.data)

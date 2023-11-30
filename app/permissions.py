@@ -19,3 +19,13 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
             return True
 
         return False
+
+
+class IsAuthorOwner(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an author profile to access it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Check if the user making the request is the owner of the author profile
+        return obj.user == request.user

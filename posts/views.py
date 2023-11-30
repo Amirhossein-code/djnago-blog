@@ -46,7 +46,7 @@ class PostViewSet(ModelViewSet):
 
     """
 
-    queryset = Post.objects.prefetch_related("category", "author").all()
+    queryset = Post.objects.select_related("author__user", "category").all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthorOrReadOnly]
     pagination_class = PostsPagination
