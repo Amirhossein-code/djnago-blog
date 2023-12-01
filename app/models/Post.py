@@ -2,9 +2,8 @@ from django.conf import settings
 from django.db import models
 from autoslug import AutoSlugField
 from taggit.managers import TaggableManager
-from app.models import Author
-from categories.models import Category
-
+from app.models.author import Author
+from app.models.category import Category
 
 class Post(models.Model):
     title = models.CharField(max_length=255)

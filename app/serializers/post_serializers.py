@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Likes, Post, Category
+from app.models.post import Likes, Post
+from app.models.category import Category
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 from rest_framework.reverse import reverse
 

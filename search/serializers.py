@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from posts.models import Post
-from categories.models import Category
-from app.models import Author
+from app.models.post import Post
+from app.models.category import Category
+from app.models.author import Author
 from .validators import validate_query_length
 from rest_framework.reverse import reverse
 

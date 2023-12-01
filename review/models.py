@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
-from app.models import Author
-from posts.models import Post
+from app.models.author import Author
+from app.models.post import Post
 
 
 # Create your models here.

@@ -9,9 +9,9 @@ from .serializers import (
     SearchAuthorSerializer,
     SearchSerializer,
 )
-from posts.models import Post
-from categories.models import Category
-from app.models import Author
+from app.models.post import Post
+from app.models.category import Category
+from app.models.author import Author
 from django.contrib.auth import get_user_model
 from .serializers import SearchCategorySerializer, SearchPostSerializer
 

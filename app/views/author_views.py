@@ -9,20 +9,20 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 
-from .filters import AuthorFilter
-from .models import Author
-from .serializers import (
+from ..filters import AuthorFilter
+from app.models.author import Author
+from app.serializers.auhtor_serializers import (
     AuthorWithPostSerializer,
     AuthorSerializer,
     SimpleAuthorSerializer,
     SimplePostSerializer,
 )
-from .pagination import (
+from ..pagination import (
     FilteredPostsPagination,
     AuthorsPagination,
 )
-from .permissions import IsAdminOrReadOnly, IsAuthorOwner
-from posts.models import Post
+from ..permissions import IsAdminOrReadOnly, IsAuthorOwner
+from app.models.post import Post
 
 
 class HomepageViewSet(viewsets.ViewSet):

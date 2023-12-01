@@ -3,20 +3,20 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from .filters import PostFilter
-from .models import Likes, Post
-from .serializers import (
+from ..filters import PostFilter
+from app.models.post import Likes, Post
+from app.serializers.post_serializers import (
     CreatePostSerializer,
     MyPostsSerializer,
     PostLikeSerializer,
     PostSerializer,
     PostWithLikeSerializer,
 )
-from .pagination import (
+from ..pagination import (
     PostsPagination,
 )
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsAuthorOrReadOnly
+from ..permissions import IsAuthorOrReadOnly
 from rest_framework import status
 from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
@@ -100,7 +100,7 @@ class PostViewSet(ModelViewSet):
         user = self.request.user
         post = get_object_or_404(Post, id=pk)
         current_likes = post.likes
-        liked = Likes.objects.filter(user=user, post=post)  
+        liked = Likes.objects.filter(user=user, post=post)
 
         if not liked:
             Likes.objects.create(user=user, post=post)

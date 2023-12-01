@@ -1,25 +1,22 @@
-from django_filters.rest_framework import DjangoFilterBackend
+from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import (
     IsAuthenticated,
 )
-
-from .filters import CategoryFilter
-from .models import Category
-from .serializers import (
+from django_filters.rest_framework import DjangoFilterBackend
+from ..filters import CategoryFilter
+from ..models import Category
+from app.serializers.category_serializers import (
     CategoryWithPostsSerializer,
-    SimplePostSerializer,
     CategorySerializer,
 )
-from .pagination import (
-    FilteredPostsPagination,
+from ..pagination import (
     CategoriesPagination,
 )
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from posts.models import Post
-from django.urls import reverse
+from ..permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from app.models.post import Post
 
 
 # Create your views here.

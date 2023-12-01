@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.models import Author
+from app.models.author import Author
 from .models import PostReview, AuthorReview, Review
 
 
