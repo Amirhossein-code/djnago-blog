@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from .models import Author
+from app.models.Author import Author
 from posts.serializers import SimplePostSerializer
 
 

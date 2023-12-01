@@ -100,7 +100,7 @@ class PostViewSet(ModelViewSet):
         user = self.request.user
         post = get_object_or_404(Post, id=pk)
         current_likes = post.likes
-        liked = Likes.objects.filter(user=user, post=post)  # .exists()
+        liked = Likes.objects.filter(user=user, post=post)  
 
         if not liked:
             Likes.objects.create(user=user, post=post)
