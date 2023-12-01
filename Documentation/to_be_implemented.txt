@@ -1,3 +1,4 @@
+- implement image field for posts and support multiple images 
 - review all serializers and refine them to the specific 
   behaviours of the related end point 
   Try more to use urls in serializers for better redirecting 
