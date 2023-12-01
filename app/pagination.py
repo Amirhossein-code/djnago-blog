@@ -7,3 +7,11 @@ class AuthorsPagination(PageNumberPagination):
 
 class FilteredPostsPagination(PageNumberPagination):
     page_size = 20
+
+
+class CategoriesPagination(PageNumberPagination):
+    page_size = 50
+
+
+class FilteredPostsPagination(PageNumberPagination):
+    page_size = 20

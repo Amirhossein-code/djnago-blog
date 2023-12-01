@@ -24,3 +24,13 @@ class AuthorFilter(FilterSet):
             "user__email": ["icontains"],
             "bio": ["icontains"],
         }
+
+
+class CategoryFilter(FilterSet):
+    tags__name = CharFilter(field_name="tags__name", lookup_expr="icontains")
+
+    class Meta:
+        model = Category
+        fields = {
+            "title": ["icontains"],
+        }
