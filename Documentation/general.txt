@@ -1,0 +1,6 @@
+User Sign in
+    +Users can sign in at                     /auth/Users
+    +then users jwt token can be created at   /auth/jwt/create
+    +users can compelte the sign in using     /authors/me 
+    and provide additional information
+    

@@ -1,9 +1,13 @@
+from django.contrib.auth.models import AnonymousUser
 from rest_framework import serializers
 from app.models.author import Author
 from .models import PostReview, AuthorReview, Review
+from .validators import validate_rating
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    rating = serializers.FloatField(validators=[validate_rating])
+
     class Meta:
         model = Review
         fields = [
@@ -23,8 +27,12 @@ class PostReviewSerializer(serializers.ModelSerializer):
         fields = ReviewSerializer.Meta.fields + []
 
     def create(self, validated_data):
-        post_id = self.context.get("post_id")
         user = self.context.get("user")
+        if isinstance(user, AnonymousUser):
+            raise serializers.ValidationError(
+                "You must be logged in to submit a review."
+            )
+        post_id = self.context.get("post_id")
 
         validated_data["post_id"] = post_id
         validated_data["user"] = user
@@ -48,9 +56,22 @@ class AuthorReviewSerializer(serializers.ModelSerializer):
         model = AuthorReview
         fields = ReviewSerializer.Meta.fields + []
 
+    def validate_user(self, value):
+        if isinstance(value, AnonymousUser):
+            raise serializers.ValidationError(
+                "You must be logged in to submit a review."
+            )
+        return value
+
     def create(self, validated_data):
-        author_id = self.context.get("author_id")
         user = self.context.get("user")
+
+        if isinstance(user, AnonymousUser):
+            raise serializers.ValidationError(
+                "You must be logged in to submit a review."
+            )
+
+        author_id = self.context.get("author_id")
 
         author = Author.objects.get(id=author_id)
 

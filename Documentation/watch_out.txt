@@ -1,0 +1,4 @@
+1-when using the html form the tags field is bugged and can not be set blank
+    but when passing the same data using the raw data everything works fine
+    tags are well working with json 
+
