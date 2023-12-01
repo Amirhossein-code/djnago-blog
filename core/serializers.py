@@ -1,4 +1,3 @@
-from app.models.author import Author
 from djoser.serializers import (
     UserSerializer as BaseUserSerializer,
     UserCreateSerializer as BaseUserCreateSerializer,
