@@ -4,3 +4,13 @@ User Sign in
     +users can compelte the sign in using     /authors/me 
     and provide additional information
     
+Posts 
+    +logged in users can post at              /posts
+    +view a speific post                      /posts/<ID>
+    +viwe posts of the logged in user         /posts/my-posts 
+    +logged in user can modify their          /post/<ID>
+    posts at PUT DELETE
+    +post reviews                             /posts/<ID>/reviews 
+    +view a specific review or the loged      /posts/<ID>/reviews/<ID>
+    in users can modify their reviews
+    

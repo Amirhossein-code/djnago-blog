@@ -23,13 +23,6 @@ Authors end-points
 /authors/<id>/reviews         See all related author reviews
 /authors/<id>/reviews/<id>    See specific review / Update 
 
-Posts Endpoint
-/posts                         List of all posts 
-/posts/my-posts                logged in user can see all thier posts
-/posts/<id>                    see specific post 
-/posts/<id>/reviews            see post reviews
-/posts/<id>/reviews/<id>       see a specific post reviews
-
 Categories Endpoint
 /categories                 list all categories 
 /categories/<id>            see specific category with related posts (Just Into level need to implement filteration to show a number of best posts)

@@ -1,17 +1,22 @@
-Current status :
-    Likes app implemented partially
-    likely to be bugged 
-    the implementation needs to be improved 
-##############################################
-- SMTP server for authenticating emails
-  + SMTP for dev maybe a good option 
+- review all serializers and refine them to the specific 
+  behaviours of the related end point 
+  Try more to use urls in serializers for better redirecting 
+  ensure that data being shared via a serialzier is well adjusted 
+- Security checklist 
+- implement cros
+- refine the permissions in some instances they may 
+  not be effective and data may be for all to server
 - Improve admin panel Implementations
+- caching back end implement redis 
+- implement celery  
 - Testing
   - pytest tests for all behaviuors
   - loctus
-- getting ready for deployment
-- Docker implementation
+- getting ready for deployment on vps or Paas
 
+Furthur Implementations:
+- create the front end using django templates
+- Implement wagtail CMS
 
 
 
