@@ -23,8 +23,6 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "app",
-    "posts",
-    "categories",
     "search",
     "review",
     "core",
@@ -50,7 +48,7 @@ DATABASES = {
         "USER": "root",
         "PASSWORD": "MySQL124@SE",
         "HOST": "localhost",
-        "PORT": '3306',
+        "PORT": "3306",
     }
 }
 

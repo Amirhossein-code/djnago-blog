@@ -1,13 +1,11 @@
 from django.urls import reverse
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
 from rest_framework.permissions import (
     IsAuthenticated,
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from ..filters import CategoryFilter
-from ..models import Category
+from app.models.category import Category
 from app.serializers.category_serializers import (
     CategoryWithPostsSerializer,
     CategorySerializer,
@@ -15,8 +13,7 @@ from app.serializers.category_serializers import (
 from ..pagination import (
     CategoriesPagination,
 )
-from ..permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from app.models.post import Post
+from ..permissions import IsAdminOrReadOnly
 
 
 # Create your views here.

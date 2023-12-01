@@ -1,9 +1,8 @@
-from rest_framework import serializers
-from app.models.category import Category
-from taggit.serializers import TagListSerializerField, TaggitSerializer
-from app.models.post import Post
-from rest_framework.serializers import HyperlinkedRelatedField, HyperlinkedIdentityField
 from django.urls import reverse
+from rest_framework import serializers
+from taggit.serializers import TagListSerializerField, TaggitSerializer
+from app.models.category import Category
+from app.models.post import Post
 
 
 # Category serialziers
